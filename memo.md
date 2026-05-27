@@ -15,3 +15,5 @@ pip install pillow
 pip install konlpy
 pip install wordcloud
 ```
+4. Windows 패키지 관리자(winget)를 사용하여 C++ 개발에 필요한 Visual Studio 빌드 도구(Build Tools)를 사용자 개입 없이 자동으로 설치
+`winget install Microsoft.VisualStudio.BuildTools --override " --passive --wait --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended" `
