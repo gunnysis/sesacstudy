@@ -1,3 +1,6 @@
+0. 메모
+
+
 1. 정적 페이지 크롤링
 - requests
 - BeautifulSoup
