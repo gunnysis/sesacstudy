@@ -1,5 +1,5 @@
 ## 0. 메모
-### - git
+- git
 ```
 git config --global user.name "gunny"
 git config --global user.email "qkr133456@gmail.com"
@@ -7,11 +7,11 @@ git config --global user.email "qkr133456@gmail.com"
 `git config credential.helper store`
 
 ## 1. 정적 페이지 크롤링
-### - requests
-### - BeautifulSoup
+- requests
+- BeautifulSoup
 ## 2. 동적 페이지 크롤링
-### - playwright
-### - selenium
+- playwright
+- selenium
 ## 3. 크롤링에 필요한 라이브러리 설치
 ```
 pip install requests
