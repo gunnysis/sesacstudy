@@ -26,22 +26,6 @@ sesac_dev/
 │   ├── venv/                       # (gitignore 대상)
 │   └── README.md                   # 가상환경 셋업 절차 문서
 │
-├── 새싹강의교안/                 # 강의 교안 PDF (주제별 분류)
-│   ├── AI 역량강화_1일차_생성형 AI.pdf
-│   ├── AI 역량 강화_2일차_2026 Stanford AI Index Report.pdf
-│   ├── 웹 데이터 수집 1.pdf
-│   ├── 웹 데이터 수집 2.pdf
-│   ├── 웹 데이터 수집 3.pdf
-│   ├── AI 협업을위한 오픈소스 에코시스템 및 Github 워크플로우/
-│   │   ├── 0. 파이썬 데이터 분석.pdf
-│   │   ├── 1. 개발 환경 설정 - VS Code 설치.pdf
-│   │   ├── 2. 개발 환경 설정 - Git 설치.pdf
-│   │   ├── 3. 개발 환경 설정 - Python 설치.pdf
-│   │   ├── 4. 개발 환경 설정 - VS Code Extension 설치.pdf
-│   │   └── 5. 개발 환경 설정 - 파이썬 가상 환경.pdf
-│   └── 데이터 과학 및 AI를 위한 지능형 Python프로그래밍/
-│       ├── 파이썬 기본 문법 1.pdf
-│       └── 파이썬 기본 문법 2.pdf
 │
 ├── memo.md                     # 학습 메모 (크롤링 라이브러리, winget 명령어 등)
 ├── git clone with personal access token.pdf
