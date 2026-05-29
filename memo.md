@@ -5,6 +5,10 @@ git config --global user.name "gunny"
 git config --global user.email "qkr133456@gmail.com"
 ```
 `git config credential.helper store`
+- 데이터셋 사이트
+[https://aihub.or.kr/](https://)
+[https://www.kaggle.com/datasets](https://)
+
 
 ## 1. 정적 페이지 크롤링
 - requests
