@@ -1,17 +1,16 @@
 
-# simbolic Links 
-study_sorce_link/
-sesac_docs_link/
+# Symbolic links (로컬 절대경로 — 추적 금지)
+study_source_link
+sesac_docs_link
 
 
 # 교육용 파일(외부 배포 금지)
 새싹강의교안/
 
-# 대용량 학습 데이터 (bike_rent_*.csv 각 17~24MB) — git 미포함
-# README.md, bike_shop.csv(소용량 대여소 정보)만 추적
-sesacstudy/0601/bikerental-data/*
-!sesacstudy/0601/bikerental-data/README.md
-!sesacstudy/0601/bikerental-data/bike_shop.csv
+# 대용량 학습 데이터 (CSV/JSON 등) — git 미포함, 각 폴더의 README로 출처 안내
+sesacstudy/**/*-data/*.csv
+sesacstudy/**/*-data/*.json
+!sesacstudy/**/*-data/README.md
 
 # Virtual environments
 venv/
