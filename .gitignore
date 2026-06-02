@@ -7,6 +7,9 @@ sesac_docs_link/
 # 교육용 파일(외부 배포 금지)
 새싹강의교안/
 
+# 대용량 학습 데이터 (각 17~24MB, 추적 제외)
+sesacstudy/0601/bikerental-data/bike_rent_*.csv
+
 # Virtual environments
 venv/
 env/
