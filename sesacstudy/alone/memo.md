@@ -1,12 +1,11 @@
-   
-   [reference](https://app.notion.com/p/ms-ai-practice/ai_interview_mermaid_diagrams-3758ddd3f5e88048aa9fd32d3cc816af)
- 
-   1. [User Flow Diagram](sesacstudy\alone\eundunhealth-user-flow-diagram.ipynb)
+[reference](https://app.notion.com/p/ms-ai-practice/ai_interview_mermaid_diagrams-3758ddd3f5e88048aa9fd32d3cc816af)
 
-`  ![Image](/sesacstudy/alone/user-flow-diagram.png)
+1. [User Flow Diagram](sesacstudy\alone\eundunhealth-user-flow-diagram.ipynb)
 
-   1. System Architecture Diagram
+` ![Image](/sesacstudy/alone/user-flow-diagram.png)
 
-   2. Request Sequence Diagram
+1. System Architecture Diagram
 
-   4.
+2. Request Sequence Diagram
+
+3.

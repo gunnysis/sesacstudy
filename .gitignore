@@ -1,4 +1,7 @@
 
+# custom
+0601/병원정보.txt
+
 # Symbolic links (로컬 절대경로 — 추적 금지)
 study_source_link
 sesac_docs_link
@@ -52,3 +55,4 @@ desktop.ini
 # Env files
 .env
 .env.local
+

@@ -7,7 +7,7 @@
 
 ## 디렉토리 구조
 
-```
+```text
 sesac_dev/
 ├── sesacstudy/                 # 일자별 실습 코드 (MMDD 형식)
 │   ├── 0522/                   # 수학·시각화
@@ -25,16 +25,22 @@ sesac_dev/
 │   │   ├── pandas-exercise.ipynb
 │   │   ├── matplotlib-exercise.ipynb
 │   │   └── seaborn-exercise.ipynb
-│   └── 0601/                   # 시각화 심화 + 시계열
-│       ├── seaborn-exercise.ipynb
-│       ├── timeseries-exercise.ipynb  # 시계열 (relativedelta 등)
-│       ├── polium-exercise.ipynb      # folium 지도 시각화
-│       ├── map.html                   # folium 결과물
-│       └── requirements.txt
+│   ├── 0601/                   # 시각화 심화 + 시계열
+│   │   ├── seaborn-exercise.ipynb
+│   │   ├── timeseries-exercise.ipynb  # 시계열 (relativedelta 등)
+│   │   ├── polium-exercise.ipynb      # folium 지도 시각화
+│   │   ├── map.html                   # folium 결과물
+│   │   ├── 병원정보.txt               # folium 실습용 병원 좌표 데이터 (git 미포함, 로컬 전용)
+│   │   └── requirements.txt
+│   └── alone/                  # 개인 프로젝트 (날짜 실습과 별개)
+│       ├── eundunhealth-user-flow-diagram.ipynb  # Mermaid 사용자 플로우 다이어그램
+│       ├── user-flow-diagram.png                 # 다이어그램 결과물
+│       └── memo.md                               # 작업 메모 (Notion 참고)
 │
 ├── memo/                       # 학습 메모
 │   ├── memo.md                     # Git / 크롤링 / 라이브러리 등
 │   └── azure.md                    # Azure 강의 자료 메모
+├── CLAUDE.md                   # Claude Code 작업 가이드
 ├── .gitignore
 └── README.md                   # (현재 파일)
 ```
@@ -68,7 +74,13 @@ sesac_dev/
 
 - **seaborn** 통계 시각화 심화
 - **시계열** 데이터 처리 (`dateutil.relativedelta` 등)
-- **folium** 지도 시각화 (`map.html` 결과물)
+- **folium** 지도 시각화 (`map.html` 결과물, `병원정보.txt` 병원 좌표 데이터 사용)
+
+### alone — 개인 프로젝트 (은둔헬스)
+
+- 날짜별 실습과 별개로 진행하는 개인 작업 공간
+- **Mermaid** 로 헬스 앱 사용자 플로우 다이어그램 작성 → [mermaid.ink](https://mermaid.ink) 원격 API 로 이미지 렌더링
+- `requests` + `Pillow` + `matplotlib` 만 사용 (별도 가상환경 없이 노트북 내 `%pip install` 로 설치)
 
 학습 메모는 [memo/](memo/) 폴더 참고.
 
