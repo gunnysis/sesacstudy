@@ -1,14 +1,10 @@
 
+
 # custom
 0601/병원정보.txt
 
 # Symbolic links (로컬 절대경로 — 추적 금지)
-study_source_link
-sesac_docs_link
-
-
-# 교육용 파일(외부 배포 금지)
-새싹강의교안/
+study_docs_link/
 
 # 대용량 학습 데이터 (CSV/JSON 등) — git 미포함, 각 폴더의 README로 출처 안내
 sesacstudy/**/*-data/*.csv
