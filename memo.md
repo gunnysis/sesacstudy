@@ -72,3 +72,86 @@ Windows 패키지 관리자(winget)로 Visual Studio Build Tools를 사용자 �
 ```powershell
 winget install Microsoft.VisualStudio.BuildTools --override " --passive --wait --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended"
 ```
+
+## 6. 재발생 시 사용법
+
+- 증상 예시: `ModuleNotFoundError: No module named 'cv2'` 같은 패키지 관련 오류가 발생할 때.
+
+- 빠른 대응 절차:
+
+	1. 작업 폴더로 이동
+
+		 ```powershell
+		 cd C:\Users\EL066\sesac\dev\sesacstudy\0611
+		 ```
+
+	2. 가상환경이 없으면 생성 (Windows에서):
+
+		 ```powershell
+		 py -3 -m venv .venv
+		 ```
+
+		 또는 특정 Python 실행파일을 지정해서 생성:
+
+		 ```powershell
+		 C:\Path\To\python.exe -m venv .venv
+		 ```
+
+	3. 가상환경 활성화
+
+		 - PowerShell:
+
+			 ```powershell
+			 .\.venv\Scripts\Activate.ps1
+			 ```
+
+
+		 - Git Bash / WSL:
+
+			 ```bash
+			 source .venv/Scripts/activate
+			 ```
+
+	4. 의존성 설치
+
+		 - 프로젝트 루트에 `requirements.txt`가 있으면:
+
+			 ```bash
+			 pip install -r requirements.txt
+			 ```
+
+		 - 특정 패키지만 필요하면 직접 설치 (예: OpenCV):
+
+			 ```bash
+			 pip install opencv-python
+			 ```
+
+	5. 실행 예시
+
+		 ```powershell
+		 .\.venv\Scripts\python.exe Ch.01\1-1.py
+		 ```
+
+	6. 환경 동기화(권장)
+
+		 - 패키지 변경 후 `requirements.txt` 갱신:
+
+			 ```bash
+			 pip freeze > requirements.txt
+			 ```
+
+- 추가 팁:
+
+	- `Activate.ps1` 실행 권한 문제가 있으면 PowerShell에서 다음을 실행한 뒤 활성화하세요:
+
+		```powershell
+		Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned
+		.\.venv\Scripts\Activate.ps1
+		```
+
+	- pip 문제가 있으면 업그레이드:
+
+		```bash
+		python -m pip install --upgrade pip
+		```
+
