@@ -32,14 +32,28 @@ sesac_dev/
 │   │   ├── map.html                   # folium 결과물
 │   │   ├── 병원정보.txt               # folium 실습용 병원 좌표 데이터 (git 미포함, 로컬 전용)
 │   │   └── requirements.txt
+│   ├── 0610/                   # 데이터 전처리 실습 (클론: Preprocessing-excersize)
+│   │   └── Preprocessing-excersize-main/
+│   │       └── notebooks/          # 02.x 정제·집계·결합·분할 / 03.x 수치·범주·날짜·GIS, CustomVision
+│   ├── 0611/                   # OpenCV 이미지 처리
+│   │   ├── cv_study.py             # 이진화(Otsu threshold) 등 OpenCV 실습
+│   │   ├── assets/                 # 실습용 이미지 (RGB·soccer 등)
+│   │   └── requirements.txt
 │   └── alone/                  # 개인 프로젝트 (날짜 실습과 별개)
 │       ├── eundunhealth-user-flow-diagram.ipynb  # Mermaid 사용자 플로우 다이어그램
 │       ├── user-flow-diagram.png                 # 다이어그램 결과물
 │       └── memo.md                               # 작업 메모 (Notion 참고)
 │
+├── DL-Excersize/               # 딥러닝 전이학습 실습 (자체 git 저장소·부모 미추적)
+│   ├── ClassifySpaceRockCode.ipynb # 전이학습 우주 암석 분류 (PyTorch)
+│   ├── moonrockmodel.pth           # 학습된 모델 가중치
+│   ├── data/                       # Basalt / Highland 암석 이미지 (클래스별)
+│   └── notebooks/                  # DL3 교재 · gradio · RESTAPI (모델 배포 실습)
+├── study_docs_link/            # 외부 강의교안 심볼릭 링크 (미추적·외부배포금지, ↓ VSCode 설정 참고)
 ├── memo/                       # 학습 메모
 │   ├── memo.md                     # Git / 크롤링 / 라이브러리 등
 │   └── azure.md                    # Azure 강의 자료 메모
+├── .vscode/                    # 에디터 설정 (PDF 라우팅·외부 열기 태스크 등)
 ├── CLAUDE.md                   # Claude Code 작업 가이드
 ├── .gitignore
 └── README.md                   # (현재 파일)
@@ -47,6 +61,10 @@ sesac_dev/
 
 > 대용량 데이터셋(CSV/JSON)은 git에 포함하지 않습니다. 데이터가 필요한 실습은
 > 해당 `*-data/` 폴더의 README 안내에 따라 직접 배치하세요.
+>
+> `DL-Excersize/`, `0610/Preprocessing-excersize-main/` 등은 외부에서 받아온 실습 패키지로
+> 자체 `.git`·`requirements.txt`·`.devcontainer` 를 포함합니다. 특히 `DL-Excersize/` 는
+> 독립 git 저장소라 부모 저장소에는 추적되지 않습니다(임베디드 repo).
 
 ---
 
@@ -76,6 +94,26 @@ sesac_dev/
 - **시계열** 데이터 처리 (`dateutil.relativedelta` 등)
 - **folium** 지도 시각화 (`map.html` 결과물, `병원정보.txt` 병원 좌표 데이터 사용)
 
+### 0610 — 데이터 전처리 실습
+
+- 외부 실습 패키지(`Preprocessing-excersize`) 기반
+- **데이터 정제·가공**: 선택(Selection) / 집계(Aggregation) / 결합(Join) / 분할(Split) / 생성(Generate) / 전개(Spread)
+- **타입별 전처리**: 수치(Number) / 범주(Category) / 날짜시간(DateTime) / 지리정보(GIS)
+- **Azure Custom Vision**: 이미지 분류 · 객체 탐지(`objectdetection.ipynb`) 실습
+
+### 0611 — OpenCV 이미지 처리
+
+- **OpenCV**(`cv2`) 로 이미지 읽기·이진화(Otsu threshold)·표시
+- `cv.imread()` 는 **현재 작업 디렉토리(cwd)** 기준으로 경로를 찾음에 유의 (스크립트 위치 아님)
+
+### DL-Excersize — 딥러닝 전이학습 (우주 암석 분류)
+
+- **PyTorch 전이학습**으로 암석 이미지(Basalt/현무암 · Highland/고지대) 분류 → `moonrockmodel.pth` 저장
+- 메인 노트북: `ClassifySpaceRockCode.ipynb`
+- **모델 배포 실습**: Gradio 웹 UI(`notebooks/gradio/`) · REST API(`notebooks/RESTAPI/`)
+- `DL3_20241006/` 딥러닝 교재(ch00~ch08) 포함
+- 독립 git 저장소(임베디드)라 부모 저장소에는 추적되지 않음
+
 ### alone — 개인 프로젝트 (은둔헬스)
 
 - 날짜별 실습과 별개로 진행하는 개인 작업 공간
@@ -102,6 +140,61 @@ Playwright 사용 시(0527) 브라우저 바이너리도 함께 설치합니다.
 ```powershell
 playwright install
 ```
+
+---
+
+## VSCode 설정 — 심볼릭 링크 폴더의 PDF 보기
+
+`study_docs_link/` 는 워크스페이스 **바깥**(외부배포금지 강의교안)을 가리키는 심볼릭 링크입니다.
+VSCode 의 PDF 뷰어 확장은 webview 보안 정책(`localResourceRoots`)상 워크스페이스 안의 파일만
+로드할 수 있어, 이 폴더의 PDF 를 내장 뷰어로 열면 `Missing PDF` (PDF.js) 에러가 납니다.
+
+이를 위해 `.vscode/` 에 다음을 구성해 두었습니다.
+
+- **`.vscode/settings.json`** — `workbench.editorAssociations` 로 PDF 라우팅
+  - `*.pdf` → `pdf.preview` (일반 PDF 는 VSCode 내장 뷰어로 표시)
+  - `**/study_docs_link/**/*.pdf` → `default` (깨진 PDF.js 에러 대신 바이너리 안내 화면)
+- **`.vscode/tasks.json`** + **`.vscode/open-external.ps1`** — `현재 파일 외부 앱으로 열기` 태스크
+  (OS 기본 앱으로 실행. 경로가 죽었으면 같은 파일명을 현재 트리에서 찾아 자동으로 여는 **자가 치유** 포함)
+- **`%APPDATA%\Code\User\keybindings.json`** (사용자 전역) — `Ctrl+Alt+O` 단축키
+  - `study_docs_link` 안의 `.pdf` 에서만 위 태스크를 실행
+
+**사용법**: 심볼릭 링크 폴더의 PDF 클릭 → 안내 화면이 뜨면 `Ctrl+Alt+O` → 외부 앱(브라우저/Acrobat)에서 열림.
+일반 PDF 는 평소대로 VSCode 안에서 바로 보입니다. (VSCode 구조상 클릭 즉시 자동 외부 실행은 불가능하여 단축키 한 번 방식)
+
+> 특정 브라우저로 강제하려면 `tasks.json` 의 `args` 마지막 항목을 `"Start-Process msedge.exe -ArgumentList '${file}'"` 로 변경.
+> 단축키를 모든 PDF 에 적용하려면 keybindings 의 `when` 에서 `&& resourcePath =~ /study_docs_link/` 제거.
+
+**경로가 바뀌어도 자가 치유됩니다.** `study_docs_link` 가 가리키는 공유 강의자료 폴더는
+수시로 재구성(폴더명 변경·계층 이동)됩니다. VSCode 세션 복원으로 떠 있는 옛 PDF 탭은 파일이
+이동하면 내장 뷰어에서 `Missing PDF` 가 납니다. 이때 `Ctrl+Alt+O` 를 누르면 `open-external.ps1`
+이 죽은 경로를 감지하고 **같은 파일명을 현재 트리에서 (한글 NFC 정규화 비교로) 찾아 자동으로**
+외부 앱에 엽니다. 동명 파일도 못 찾으면 탐색기로 현재 트리를 열어 직접 찾도록 합니다.
+
+### 다른 PC 에서 재사용하기 (중요)
+
+`.vscode/` 는 기본적으로 git 제외지만, 재사용을 위해 **안전한 설정 파일만** 추적합니다
+(`.gitignore` 에서 `settings.json`·`tasks.json`·`open-external.ps1`·`extensions.json` 만 화이트리스트).
+이 파일들은 절대경로·비밀 없이 상대경로(`${workspaceFolder}`, `$PSScriptRoot`)만 쓰므로
+clone 하면 어느 PC 에서나 그대로 동작합니다.
+
+> **단, `Ctrl+Alt+O` 단축키는 따라오지 않습니다.** 단축키 정의는 저장소가 아니라 **사용자 전역**
+> 파일(`%APPDATA%\Code\User\keybindings.json`)에 있어 git 으로 동기화되지 않습니다.
+> 새 PC 에서는 그 파일에 아래를 추가해야 단축키가 동작합니다(태스크 자체는 `.vscode/` 로 따라옴).
+
+```jsonc
+// %APPDATA%\Code\User\keybindings.json
+[
+  {
+    "key": "ctrl+alt+o",
+    "command": "workbench.action.tasks.runTask",
+    "args": "현재 파일 외부 앱으로 열기",
+    "when": "resourceExtname == .pdf && resourcePath =~ /study_docs_link/"
+  }
+]
+```
+
+> `.claude/` (Claude Code 로컬 설정)는 절대경로·자동승인 목록 등이 들어 있어 **의도적으로 git 제외**합니다 — 공유하지 마세요.
 
 ---
 

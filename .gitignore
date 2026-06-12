@@ -39,7 +39,12 @@ dist/
 .claude/
 
 # IDE
-.vscode/
+# .vscode 내용물은 기본 제외하되, 다른 PC 재사용용 공유 안전 설정만 추적 (절대경로·비밀 없음)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/open-external.ps1
+!.vscode/extensions.json
 .idea/
 *.swp
 *.swo
