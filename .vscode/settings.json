@@ -2,5 +2,6 @@
   "workbench.editorAssociations": {
     "*.pdf": "pdf.preview",
     "**/study_docs_link/**/*.pdf": "default"
-  }
+  },
+  "git.ignoreLimitWarning": true
 }

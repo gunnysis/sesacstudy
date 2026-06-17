@@ -2,10 +2,11 @@
 
 # custom
 0601/병원정보.txt
+DL3_20241006/
 
 # Symbolic links (로컬 절대경로 — 추적 금지)
 study_docs_link/
-study_docs_link
+first_project_3team/
 
 # 대용량 학습 데이터 (CSV/JSON 등) — git 미포함, 각 폴더의 README로 출처 안내
 sesacstudy/**/*-data/*.csv
