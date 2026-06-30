@@ -38,21 +38,28 @@ sesac_dev/
 │   ├── 0611/                   # OpenCV 이미지 처리
 │   │   ├── cv_study.py             # 이진화(Otsu threshold) 등 OpenCV 실습
 │   │   ├── assets/                 # 실습용 이미지 (RGB·soccer 등)
+│   │   ├── memo.md                 # OpenCV 실습 메모
 │   │   └── requirements.txt
+│   ├── 0615/                   # 분류 실습용 데이터셋
+│   │   └── adult.csv               # UCI Adult(Census Income) — 연소득 >50K 분류용
+│   ├── mslearn-openai/         # Azure OpenAI 공식 실습 (클론 평탄화 — 내부 .git 제거)
+│   │   ├── Instructions/Exercises/  # 01~06 실습 가이드
+│   │   ├── Labfiles/                # 실습 코드(Python·C#) + 데이터(brochures·자체데이터 RAG 등)
+│   │   └── readme.md                # ⚠ Labfiles/**/Python/.env(Azure 키)는 .gitignore 제외
+│   ├── mslearn-ai-agents/      # Azure AI 에이전트(Foundry) 공식 실습 (클론 평탄화)
+│   │   ├── Instructions/Exercises/  # 에이전트 구축·MCP·오케스트레이션·A2A 등
+│   │   └── Labfiles/                # 실습 코드 (venv labenv/ 는 제외)
 │   └── alone/                  # 개인 프로젝트 (날짜 실습과 별개)
-│       ├── eundunhealth-user-flow-diagram.ipynb  # Mermaid 사용자 플로우 다이어그램
-│       ├── user-flow-diagram.png                 # 다이어그램 결과물
-│       └── memo.md                               # 작업 메모 (Notion 참고)
+│       ├── eundunhealth-user-flow-diagram.ipynb  # 멘탈헬스 앱 Mermaid 사용자 플로우
+│       ├── karaoke_data_analyze.ipynb            # 노래연습장 인허가 공공데이터 분석
+│       ├── assets/                 # 결과물 (user-flow-diagram.png 등)
+│       ├── docs/                   # 메모·약관·통계 문서 + 분석용 CSV
+│       └── requirements.txt
 │
-├── DL-Excersize/               # 딥러닝 전이학습 실습 (자체 git 저장소·부모 미추적)
-│   ├── ClassifySpaceRockCode.ipynb # 전이학습 우주 암석 분류 (PyTorch)
-│   ├── moonrockmodel.pth           # 학습된 모델 가중치
-│   ├── data/                       # Basalt / Highland 암석 이미지 (클래스별)
-│   └── notebooks/                  # DL3 교재 · gradio · RESTAPI (모델 배포 실습)
 ├── study_docs_link/            # 외부 강의교안 심볼릭 링크 (미추적·외부배포금지, ↓ VSCode 설정 참고)
-├── memo/                       # 학습 메모
-│   ├── memo.md                     # Git / 크롤링 / 라이브러리 등
-│   └── azure.md                    # Azure 강의 자료 메모
+├── memo.md                     # 학습 메모 (Git / 크롤링 / 라이브러리 등)
+├── azure.md                    # Azure 강의 자료 메모
+├── error_report.md             # 작업 중 오류·해결 기록
 ├── .vscode/                    # 에디터 설정 (PDF 라우팅·외부 열기 태스크 등)
 ├── CLAUDE.md                   # Claude Code 작업 가이드
 ├── .gitignore
@@ -62,9 +69,12 @@ sesac_dev/
 > 대용량 데이터셋(CSV/JSON)은 git에 포함하지 않습니다. 데이터가 필요한 실습은
 > 해당 `*-data/` 폴더의 README 안내에 따라 직접 배치하세요.
 >
-> `DL-Excersize/`, `0610/Preprocessing-excersize-main/` 등은 외부에서 받아온 실습 패키지로
-> 자체 `.git`·`requirements.txt`·`.devcontainer` 를 포함합니다. 특히 `DL-Excersize/` 는
-> 독립 git 저장소라 부모 저장소에는 추적되지 않습니다(임베디드 repo).
+> **외부 클론 정리** (중복·혼란 방지):
+> - `DL-Excersize/`(딥러닝 전이학습) → 대용량(`moonrockmodel.pth` 등)이라 저장소 **밖으로 이동(백업)**.
+> - `sesacstudy/mslearn-openai/`(Azure OpenAI), `sesacstudy/mslearn-ai-agents/`(Azure AI 에이전트) → 내부 `.git` 만 제거해 **일반 파일로 평탄화**하여 포함. 단 가상환경(`labenv/`)·캐시·대용량 바이너리는 제외.
+> - `sesacstudy/0610/Preprocessing-excersize-main/` → 이미 평탄화된 클론(자체 `.devcontainer`·`requirements.txt` 포함).
+>
+> ⚠ **비밀키 주의**: 클론들의 `Labfiles/**/Python/.env`(Azure 키·엔드포인트)는 `.gitignore`(`*.env`)로 반드시 제외됩니다 — 커밋 금지.
 
 ---
 
@@ -106,21 +116,28 @@ sesac_dev/
 - **OpenCV**(`cv2`) 로 이미지 읽기·이진화(Otsu threshold)·표시
 - `cv.imread()` 는 **현재 작업 디렉토리(cwd)** 기준으로 경로를 찾음에 유의 (스크립트 위치 아님)
 
-### DL-Excersize — 딥러닝 전이학습 (우주 암석 분류)
+### 0615 — 분류 실습용 데이터셋
 
-- **PyTorch 전이학습**으로 암석 이미지(Basalt/현무암 · Highland/고지대) 분류 → `moonrockmodel.pth` 저장
-- 메인 노트북: `ClassifySpaceRockCode.ipynb`
-- **모델 배포 실습**: Gradio 웹 UI(`notebooks/gradio/`) · REST API(`notebooks/RESTAPI/`)
-- `DL3_20241006/` 딥러닝 교재(ch00~ch08) 포함
-- 독립 git 저장소(임베디드)라 부모 저장소에는 추적되지 않음
+- **UCI Adult (Census Income)** 데이터셋(`adult.csv`) — 인구통계 특성으로 연소득 `>50K` 여부 분류
+- 현재는 데이터만 보관 (실습 노트북은 추후 추가)
 
-### alone — 개인 프로젝트 (은둔헬스)
+### Azure AI 실습 — mslearn-openai · mslearn-ai-agents
 
-- 날짜별 실습과 별개로 진행하는 개인 작업 공간
-- **Mermaid** 로 헬스 앱 사용자 플로우 다이어그램 작성 → [mermaid.ink](https://mermaid.ink) 원격 API 로 이미지 렌더링
-- `requests` + `Pillow` + `matplotlib` 만 사용 (별도 가상환경 없이 노트북 내 `%pip install` 로 설치)
+- **mslearn-openai**: Microsoft 공식 Azure OpenAI 실습([MicrosoftLearning/mslearn-openai](https://github.com/MicrosoftLearning/mslearn-openai)) 클론을 평탄화(내부 `.git` 제거)
+  - `Instructions/Exercises/` 01~06 가이드 + `Labfiles/` Python·C# 코드 (앱 개발 · 프롬프트 엔지니어링 · 코드 생성 · 이미지 생성 · 자체 데이터 RAG)
+  - '자체 데이터(RAG)' 실습 보조 자료(`IT_Policy.txt`·`system_performance.csv`)는 `Labfiles/02-use-own-data/data/microsoftlearning/` 에 포함
+- **mslearn-ai-agents**: Microsoft 공식 Azure AI 에이전트(Foundry) 실습 클론을 평탄화
+  - 에이전트 구축 · 커스텀 도구 · MCP 통합 · 오케스트레이션 · A2A 등 (`Labfiles/`, venv `labenv/` 는 제외)
+- ⚠ 모든 클론의 **Azure 키·엔드포인트(`.env`)는 `.gitignore` 로 제외** — 실습 시 본인 값으로 채워 사용
 
-학습 메모는 [memo/](memo/) 폴더 참고.
+### alone — 개인 프로젝트
+
+- 날짜별 실습과 별개로 진행하는 개인 작업 공간 (`assets/` 결과물 · `docs/` 문서·데이터)
+- **은둔헬스(멘탈헬스 앱)**: **Mermaid** 로 사용자 플로우 다이어그램 작성 → [mermaid.ink](https://mermaid.ink) 원격 API 로 렌더링
+- **노래연습장 데이터 분석**(`karaoke_data_analyze.ipynb`): 서울시 양천구 노래연습장 인허가 공공데이터 분석
+- 사용 패키지는 `requirements.txt` 참고
+
+학습 메모는 루트의 [memo.md](memo.md) · [azure.md](azure.md) 참고.
 
 ---
 

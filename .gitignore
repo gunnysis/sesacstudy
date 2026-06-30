@@ -6,7 +6,16 @@ DL3_20241006/
 
 # Symbolic links (로컬 절대경로 — 추적 금지)
 study_docs_link/
-first_project_3team/
+first_project_3team
+
+# 외부 클론 정리 메모:
+# - DL-Excersize : 대용량(moonrockmodel.pth 등)이라 저장소 밖으로 이동(백업)함.
+# - sesacstudy/mslearn-openai, sesacstudy/mslearn-ai-agents : 내부 .git 만 제거해
+#   일반 파일로 평탄화하여 포함. 단 가상환경(labenv/)·캐시·대용량 바이너리는 제외.
+#   (비밀키가 든 .env 는 아래 'Env files' 규칙으로 반드시 제외)
+
+# 클론 패키지의 가상환경 (각 폴더 자체 labenv/ — venv 이므로 제외)
+labenv/
 
 # 대용량 학습 데이터 (CSV/JSON 등) — git 미포함, 각 폴더의 README로 출처 안내
 sesacstudy/**/*-data/*.csv
@@ -55,7 +64,12 @@ dist/
 Thumbs.db
 desktop.ini
 
-# Env files
+# Env files (비밀키 보호 — 모든 위치의 .env 전역 제외, 예시 파일만 허용)
 .env
-.env.local
+.env.*
+*.env
+**/.env
+**/*.env
+!*.env.example
+!.env.example
 

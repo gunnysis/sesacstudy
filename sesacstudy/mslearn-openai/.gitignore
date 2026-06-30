@@ -1,0 +1,31 @@
+bin
+obj
+*.sln
+
+# 환경 변수(비밀키) — 예시 파일만 추적
+.env
+*.env
+!.env.example
+
+# 가상환경
+.venv/
+venv/
+env/
+ENV/
+
+# Python 캐시
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter
+.ipynb_checkpoints/
+
+# 백업·로컬 메모
+Labfiles/backup/
+*.bak
+*.tmp
+
+# OS
+.DS_Store
+Thumbs.db
