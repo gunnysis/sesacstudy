@@ -42,6 +42,9 @@ sesac_dev/
 │   │   └── requirements.txt
 │   ├── 0615/                   # 분류 실습용 데이터셋
 │   │   └── adult.csv               # UCI Adult(Census Income) — 연소득 >50K 분류용
+│   ├── 0701/                   # Azure AI Document Intelligence (문서 판독)
+│   │   ├── sample_analyze_read.py  # Prebuilt Read — 문서 텍스트·좌표 추출 (endpoint/key 필요)
+│   │   └── requirements.txt        # azure-ai-documentintelligence · numpy 등
 │   ├── mslearn-openai/         # Azure OpenAI 공식 실습 (클론 평탄화 — 내부 .git 제거)
 │   │   ├── Instructions/Exercises/  # 01~06 실습 가이드
 │   │   ├── Labfiles/                # 실습 코드(Python·C#) + 데이터(brochures·자체데이터 RAG 등)
@@ -70,6 +73,7 @@ sesac_dev/
 > 해당 `*-data/` 폴더의 README 안내에 따라 직접 배치하세요.
 >
 > **외부 클론 정리** (중복·혼란 방지):
+>
 > - `DL-Excersize/`(딥러닝 전이학습) → 대용량(`moonrockmodel.pth` 등)이라 저장소 **밖으로 이동(백업)**.
 > - `sesacstudy/mslearn-openai/`(Azure OpenAI), `sesacstudy/mslearn-ai-agents/`(Azure AI 에이전트) → 내부 `.git` 만 제거해 **일반 파일로 평탄화**하여 포함. 단 가상환경(`labenv/`)·캐시·대용량 바이너리는 제외.
 > - `sesacstudy/0610/Preprocessing-excersize-main/` → 이미 평탄화된 클론(자체 `.devcontainer`·`requirements.txt` 포함).
@@ -120,6 +124,13 @@ sesac_dev/
 
 - **UCI Adult (Census Income)** 데이터셋(`adult.csv`) — 인구통계 특성으로 연소득 `>50K` 여부 분류
 - 현재는 데이터만 보관 (실습 노트북은 추후 추가)
+
+### 0701 — Azure AI Document Intelligence (문서 판독)
+
+- **Azure AI Document Intelligence**(구 Form Recognizer) SDK 로 **Prebuilt Read** 모델 실습
+- `sample_analyze_read.py`: 원격 문서(URL)를 분석해 페이지별 텍스트 라인·단어·신뢰도와 **바운딩 박스 좌표**(numpy 로 정형화) 추출
+- 실행 전 코드의 `endpoint`·`key` 를 본인 Azure 리소스 값으로 채워야 함 — 키는 커밋 금지(운영 시 환경변수/`.env` 사용 권장)
+- 사용 패키지: `azure-ai-documentintelligence`(→ `azure-core`)·`numpy` (`requirements.txt` 참고)
 
 ### Azure AI 실습 — mslearn-openai · mslearn-ai-agents
 
