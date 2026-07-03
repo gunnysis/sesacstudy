@@ -38,4 +38,3 @@ stream.save_to_wav_file("C:\\Users\\EL066\\sesac\\dev\\sesacstudy\\0703\\audiofi
 #     print("Speech synthesis canceled: {}".format(cancellation_details.reason))
 #     if cancellation_details.reason == speechsdk.CancellationReason.Error:
 #         print("Error details: {}".format(cancellation_details.error_details))
-
