@@ -1,0 +1,6 @@
+<speak version="1.0" xmlns="https://www.w3.org/2001/10/synthesis" xml:lang="ja-JP">
+  <voice name="ja-JP-NanamiNeural">
+    <!-- 배고프다. 빨리 밥 먹으러 가요. -->
+    お腹がすいた早くご飯食べに行きます。どうぞ。クラスをやめましょう。
+  </voice>
+</speak>
