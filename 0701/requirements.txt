@@ -5,6 +5,7 @@ charset-normalizer==3.4.7
 idna==3.18
 isodate==0.7.2
 numpy==2.5.0
+python-dotenv==1.2.2
 requests==2.34.2
 typing_extensions==4.15.0
 urllib3==2.7.0

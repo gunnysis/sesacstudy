@@ -1,0 +1,25 @@
+#!/bin/sh
+# 커밋 전 비밀키/시크릿 스캔 — 하드코딩 키가 저장소에 들어가는 것을 차단(재발방지).
+# 활성화: git config core.hooksPath .githooks   (한 번만 실행)
+# 오탐으로 우회가 꼭 필요하면: git commit --no-verify
+
+# 스테이징된 변경(+추가 라인)만 검사
+added=$(git diff --cached -U0 --no-color | grep -E '^\+' | grep -v '^\+\+\+')
+
+# 시크릿 의심 패턴
+#  - Azure Cognitive Services 키 시그니처(JQQJ99 / AAALAC 꼬리)
+#  - Ocp-Apim-Subscription-Key / subscription= 에 붙은 20자+ 값
+#  - OpenAI sk- 토큰, 개인키 헤더, 스토리지 AccountKey
+patterns='(JQQJ99|AAALAC[A-Z0-9])|(Ocp-Apim-Subscription-Key|subscription|api[_-]?key)"?[[:space:]]*[:=][[:space:]]*"?[A-Za-z0-9/+]{20,}|sk-[A-Za-z0-9]{20,}|-----BEGIN [A-Z ]*PRIVATE KEY-----|AccountKey=[A-Za-z0-9/+=]{20,}'
+
+hits=$(printf '%s\n' "$added" | grep -EIn "$patterns" | grep -viE 'getenv|environ|os\.getenv|process\.env|\.env|example|your|<|placeholder')
+
+if [ -n "$hits" ]; then
+  echo "✖ 커밋 차단: 비밀키/시크릿 의심 패턴이 스테이징되었습니다."
+  echo "$hits"
+  echo ""
+  echo "→ 키는 .env 로 옮기고 os.getenv(...) 로 읽으세요 (.env 는 git 제외)."
+  echo "→ 정말 오탐이면: git commit --no-verify"
+  exit 1
+fi
+exit 0

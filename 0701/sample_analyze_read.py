@@ -16,9 +16,13 @@ from azure.core.credentials import AzureKeyCredential
 from azure.ai.documentintelligence import DocumentIntelligenceClient
 from azure.ai.documentintelligence.models import AnalyzeDocumentRequest
 import numpy as np
+import os
+from dotenv import load_dotenv
 
-endpoint = "https://sesac015-document-intelligence.cognitiveservices.azure.com/"
-key = "DpjLoYSjhbzy2koNrC8p7UTtbQqeqLtLj34KxlTGQEiIaaMZDBNpJQQJ99CGACNns7RXJ3w3AAALACOG8Mdd"
+# 키·엔드포인트는 코드에 하드코딩하지 말고 .env 에서 로드 (.env 는 git 제외, .env.example 참고)
+load_dotenv()
+endpoint = os.getenv("END_POINT")
+key = os.getenv("API_KEY")
 
 def format_bounding_box(bounding_box):
     if not bounding_box:

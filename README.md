@@ -1,0 +1,268 @@
+# sesacstudy
+
+새싹(SeSAC) AI 부트캠프 **일자별 실습 저장소**.
+`MMDD`(월일 4자리) 폴더 하나가 부트캠프 **하루**에 대응하며, 그 외 개인 프로젝트(`alone/`)와
+Microsoft 공식 실습 클론(`mslearn-*`)을 함께 보관합니다.
+
+> 언어는 한국어 기준입니다(주석·마크다운·커밋 메시지 모두 한국어).
+> 이 폴더가 git 저장소 루트(GitHub `gunnysis/sesacstudy`)입니다. 작업 가이드(`CLAUDE.md`)·
+> 에디터 설정(`.vscode/`)·강의교안 심볼릭 링크(`study_docs_link/`)도 이 루트에 함께 있습니다.
+
+---
+
+## 디렉토리 구조
+
+```text
+sesacstudy/
+├── 0522/                       # 수학·시각화
+│   ├── equation.py                 # SymPy 연립방정식 풀이
+│   ├── systemsOfEquations.py       # matplotlib 3D 그래프 (인바디 추이)
+│   └── test.ipynb
+├── 0527/                       # Python 기초 + 웹 크롤링
+│   ├── hello.ipynb                 # Python 기본 문법
+│   ├── web_crolling1.ipynb         # 정적 크롤링 (requests + BeautifulSoup)
+│   ├── web_crolling2.ipynb         # 정적 크롤링 심화
+│   ├── playwright-scrapping.py     # 동적 크롤링 (Playwright)
+│   └── requirements.txt
+├── 0528/                       # 데이터 분석 기초
+│   ├── numpy-exercise.ipynb
+│   ├── pandas-exercise.ipynb
+│   ├── matplotlib-exercise.ipynb
+│   └── seaborn-exercise.ipynb
+├── 0601/                       # 시각화 심화 + 시계열
+│   ├── seaborn-exercise.ipynb
+│   ├── timeseries-exercise.ipynb   # 시계열 (relativedelta 등)
+│   ├── polium-exercise.ipynb       # folium 지도 시각화
+│   ├── map.html                    # folium 결과물
+│   ├── 병원정보.txt                # folium 실습용 병원 좌표 데이터 (git 미포함, 로컬 전용)
+│   └── requirements.txt
+├── 0610/                       # 데이터 전처리 실습 (클론: Preprocessing-excersize)
+│   └── Preprocessing-excersize-main/
+│       └── notebooks/              # 02.x 정제·집계·결합·분할 / 03.x 수치·범주·날짜·GIS, CustomVision
+├── 0611/                       # OpenCV 이미지 처리
+│   ├── cv_study.py                 # 이진화(Otsu threshold) 등 OpenCV 실습
+│   ├── assets/                     # 실습용 이미지 (RGB·soccer 등)
+│   ├── memo.md                     # OpenCV 실습 메모
+│   └── requirements.txt
+├── 0615/                       # 분류 실습용 데이터셋
+│   └── adult.csv                   # UCI Adult(Census Income) — 연소득 >50K 분류용
+├── 0701/                       # Azure AI Document Intelligence + Gradio 입문
+│   ├── sample_analyze_read.py      # Prebuilt Read — 문서 텍스트·좌표 추출 (endpoint/key 필요)
+│   ├── sample.ipynb                # Gradio 입문 (Interface·ChatInterface 실습)
+│   └── requirements.txt            # azure-ai-documentintelligence · numpy 등
+├── 0702/                       # Azure Document Intelligence — 인보이스·영수증 추출
+│   ├── receipts.py                 # Prebuilt Invoice — uploads/ 이미지 일괄 분석 → docs/receipts_output.csv
+│   ├── invoices.py                 # Prebuilt Document — URL 문서 key-value 추출 (azure-ai-formrecognizer)
+│   ├── uploads/                    # 분석 대상 영수증·인보이스 이미지
+│   ├── docs/receipts_output.csv    # 추출 결과 CSV
+│   ├── .env                        # END_POINT·API_KEY (git 제외)
+│   └── requirements.txt
+├── 0703/                       # Azure Speech Services (STT·TTS·번역) + OpenAI 챗봇
+│   ├── speech_synthesis.py         # TTS — SSML(ssml.xml) → audiofile.wav 합성
+│   ├── ssml.xml                    # 다국어 음성 합성용 SSML 입력
+│   ├── translate.py                # 음성 번역 (ko-KR → it, 마이크 입력)
+│   ├── audiofile.wav               # TTS 결과물
+│   ├── speech-services/
+│   │   ├── stt.py                  # 마이크 STT (ko-KR)
+│   │   ├── test_stt.py             # Speech 인증 확인용 스크립트
+│   │   └── speech-chatbot.ipynb    # Gradio STT + Azure OpenAI 챗봇 UI
+│   └── .env                        # SPEECH_KEY·REGION·AZURE_OPENAI_* (git 제외, venv/ 도 제외)
+├── 0706/                       # (예정 — 빈 폴더)
+│
+├── alone/                      # 개인 프로젝트 (날짜 실습과 별개)
+│   ├── eundunhealth-user-flow-diagram.ipynb  # 멘탈헬스 앱 Mermaid 사용자 플로우
+│   ├── karaoke_data_analyze.ipynb            # 노래연습장 인허가 공공데이터 분석
+│   ├── assets/                     # 결과물 (user-flow-diagram.png 등)
+│   ├── docs/                       # 메모·약관·통계 문서 + 분석용 CSV
+│   └── requirements.txt
+├── mslearn-openai/             # Azure OpenAI 공식 실습 (클론 평탄화 — 내부 .git 제거)
+│   ├── Instructions/Exercises/     # 01~06 실습 가이드
+│   ├── Labfiles/                   # 실습 코드(Python·C#) + 데이터(brochures·자체데이터 RAG 등)
+│   └── readme.md                   # ⚠ Labfiles/**/Python/.env(Azure 키)는 .gitignore 제외
+├── mslearn-ai-agents/          # Azure AI 에이전트(Foundry) 공식 실습 (클론 평탄화)
+│   ├── Instructions/Exercises/     # 에이전트 구축·MCP·오케스트레이션·A2A 등
+│   └── Labfiles/                   # 실습 코드 (venv labenv/ 는 제외)
+│
+├── memo.md                     # 학습 메모 (Git / 크롤링 / 라이브러리 등)
+├── CLAUDE.md                   # Claude Code 작업 가이드 (저장소 성격·구조 규칙·환경·VSCode PDF 설정)
+├── study_docs_link             # 외부배포금지 강의교안 심볼릭 링크 (내용은 미추적)
+├── .vscode/                    # 에디터 설정 (심볼릭 링크 PDF 외부 열기 태스크 등 · 자세히는 CLAUDE.md)
+├── .gitignore                  # 데이터·venv·.env·.gradio 등 무시 규칙
+└── README.md                   # (현재 파일)
+```
+
+> 대용량 데이터셋(CSV/JSON)은 git에 포함하지 않습니다. 데이터가 필요한 실습은
+> 해당 `*-data/` 폴더의 README 안내에 따라 직접 배치하세요.
+>
+> **외부 클론 정리** (중복·혼란 방지):
+>
+> - `DL-Excersize/`(딥러닝 전이학습) → 대용량(`moonrockmodel.pth` 등)이라 저장소 **밖(`../backup/`)으로 이동(백업)**.
+> - `mslearn-openai/`(Azure OpenAI), `mslearn-ai-agents/`(Azure AI 에이전트) → 내부 `.git` 만 제거해 **일반 파일로 평탄화**하여 포함. 단 가상환경(`labenv/`)·캐시·대용량 바이너리는 제외.
+> - `0610/Preprocessing-excersize-main/` → 이미 평탄화된 클론(자체 `.devcontainer`·`requirements.txt` 포함).
+>
+> ⚠ **비밀키 주의**: 클론들의 `Labfiles/**/Python/.env`(Azure 키·엔드포인트)와 각 날짜 폴더의 `.env` 는 `.gitignore`(`*.env`)로 반드시 제외됩니다 — 커밋 금지.
+
+---
+
+## 학습 내용 요약
+
+### 0522 — 수학·시각화
+
+- **SymPy** 로 연립방정식 풀이 (`solve([ex1, ex2])`)
+- **matplotlib** 3D 플롯으로 시계열 데이터(인바디 측정값) 시각화
+
+### 0527 — Python 기초 + 웹 크롤링
+
+- 입출력 / 제어문 / 함수 / 클래스 / 람다 / `map`·`filter`·`zip`·`enumerate`
+- 파일 입출력: **JSON**, **CSV**, 정규표현식(`re`)
+- HTTP 통신: **requests** + JSONPlaceholder
+- 정적 페이지 크롤링: **BeautifulSoup4**
+- 동적 페이지 크롤링: **Playwright** (네이버 검색·금융뉴스 추출)
+
+### 0528 — 데이터 분석 기초
+
+- **NumPy** 배열 연산 / **pandas** 데이터프레임 처리
+- **matplotlib** · **seaborn** 기본 시각화
+
+### 0601 — 시각화 심화 + 시계열
+
+- **seaborn** 통계 시각화 심화
+- **시계열** 데이터 처리 (`dateutil.relativedelta` 등)
+- **folium** 지도 시각화 (`map.html` 결과물, `병원정보.txt` 병원 좌표 데이터 사용)
+
+### 0610 — 데이터 전처리 실습
+
+- 외부 실습 패키지(`Preprocessing-excersize`) 기반
+- **데이터 정제·가공**: 선택(Selection) / 집계(Aggregation) / 결합(Join) / 분할(Split) / 생성(Generate) / 전개(Spread)
+- **타입별 전처리**: 수치(Number) / 범주(Category) / 날짜시간(DateTime) / 지리정보(GIS)
+- **Azure Custom Vision**: 이미지 분류 · 객체 탐지(`objectdetection.ipynb`) 실습
+
+### 0611 — OpenCV 이미지 처리
+
+- **OpenCV**(`cv2`) 로 이미지 읽기·이진화(Otsu threshold)·표시
+- `cv.imread()` 는 **현재 작업 디렉토리(cwd)** 기준으로 경로를 찾음에 유의 (스크립트 위치 아님)
+- `cv.imshow`/`cv.waitKey` 로 GUI 창을 띄우므로 노트북이 아닌 `py` 실행 전제
+
+### 0615 — 분류 실습용 데이터셋
+
+- **UCI Adult (Census Income)** 데이터셋(`adult.csv`) — 인구통계 특성으로 연소득 `>50K` 여부 분류
+- 현재는 데이터만 보관 (실습 노트북은 추후 추가)
+
+### 0701 — Azure AI Document Intelligence + Gradio 입문
+
+- **Azure AI Document Intelligence**(구 Form Recognizer) SDK 로 **Prebuilt Read** 모델 실습
+- `sample_analyze_read.py`: 원격 문서(URL)를 분석해 페이지별 텍스트 라인·단어·신뢰도와 **바운딩 박스 좌표**(numpy 로 정형화) 추출
+- `sample.ipynb`: **Gradio** 입문 — `gr.Interface`(텍스트 인사) · `gr.ChatInterface`(간단 챗봇) 로 UI 프로토타입 실습
+- 실행 전 코드의 `endpoint`·`key` 를 본인 Azure 리소스 값으로 채워야 함 — 키는 커밋 금지(운영 시 환경변수/`.env` 사용 권장)
+- 사용 패키지: `azure-ai-documentintelligence`(→ `azure-core`)·`numpy` (`requirements.txt` 참고)
+
+### 0702 — Azure Document Intelligence (인보이스·영수증 추출)
+
+- **Prebuilt Invoice·Document** 모델로 문서에서 구조화된 필드를 추출하는 실습
+- `receipts.py`: `uploads/` 폴더의 영수증·인보이스 이미지(`.jpg/.png/.pdf` 등)를 **일괄 분석**해 공급자·고객·금액·품목 등 수십 개 필드를 `docs/receipts_output.csv`(UTF-8-SIG) 로 저장
+- `invoices.py`: 샘플 문서(URL)를 **Prebuilt Document** 로 분석해 **key-value 쌍** 출력 — 구버전 `azure-ai-formrecognizer` SDK(`DocumentAnalysisClient`) 사용
+- 키·엔드포인트는 `.env`(`END_POINT`·`API_KEY`)에서 로드 — `python-dotenv` 사용, `.env` 는 git 제외
+
+### 0703 — Azure Speech Services (STT·TTS·번역) + OpenAI 챗봇
+
+- **Azure Cognitive Services Speech SDK** 로 음성 기능 전반 실습 (언어 `ko-KR` 기준)
+  - `speech-services/stt.py`: 기본 마이크 입력을 **음성 → 텍스트(STT)** 로 인식
+  - `speech-services/test_stt.py`: 푸시 스트림으로 **Speech 리소스 인증·연결만 빠르게 점검**하는 스크립트
+  - `speech_synthesis.py`: **SSML**(`ssml.xml`, 다국어 voice 지정) 입력을 **텍스트 → 음성(TTS)** 합성해 `audiofile.wav` 로 저장
+  - `translate.py`: **음성 번역** — 마이크 한국어 입력을 이탈리아어(`it`)로 실시간 번역
+- `speech-services/speech-chatbot.ipynb`: **Gradio** UI 로 STT + **Azure OpenAI** 챗봇 결합 — 마이크 녹음을 STT 로 인식해 텍스트박스에 넣고, `AzureOpenAI` chat completions 로 대화. `demo.launch(share=True)` 로 공유 링크 생성
+- 환경변수(`.env`): `SPEECH_KEY`·`REGION`/`SERVICE_REGION`·`ENDPOINT`, 챗봇은 추가로 `AZURE_OPENAI_ENDPOINT`·`AZURE_OPENAI_KEY`·`DEPLOY_NAME` 필요 — 모두 git 제외
+- 노트북은 셀에서 `%pip install` 로 의존성(`gradio`·`azure-cognitiveservices-speech`·`openai`·`ipywidgets` 등)을 직접 설치, `speech-services/venv/` 가상환경은 git 제외
+
+### Azure AI 실습 — mslearn-openai · mslearn-ai-agents
+
+- **mslearn-openai**: Microsoft 공식 Azure OpenAI 실습([MicrosoftLearning/mslearn-openai](https://github.com/MicrosoftLearning/mslearn-openai)) 클론을 평탄화(내부 `.git` 제거)
+  - `Instructions/Exercises/` 01~06 가이드 + `Labfiles/` Python·C# 코드 (앱 개발 · 프롬프트 엔지니어링 · 코드 생성 · 이미지 생성 · 자체 데이터 RAG)
+  - '자체 데이터(RAG)' 실습 보조 자료(`IT_Policy.txt`·`system_performance.csv`)는 `Labfiles/02-use-own-data/data/microsoftlearning/` 에 포함
+- **mslearn-ai-agents**: Microsoft 공식 Azure AI 에이전트(Foundry) 실습 클론을 평탄화
+  - 에이전트 구축 · 커스텀 도구 · MCP 통합 · 오케스트레이션 · A2A 등 (`Labfiles/`, venv `labenv/` 는 제외)
+- ⚠ 모든 클론의 **Azure 키·엔드포인트(`.env`)는 `.gitignore` 로 제외** — 실습 시 본인 값으로 채워 사용
+
+### alone — 개인 프로젝트
+
+- 날짜별 실습과 별개로 진행하는 개인 작업 공간 (`assets/` 결과물 · `docs/` 문서·데이터)
+- **은둔헬스(멘탈헬스 앱)**: **Mermaid** 로 사용자 플로우 다이어그램 작성 → [mermaid.ink](https://mermaid.ink) 원격 API 로 렌더링
+- **노래연습장 데이터 분석**(`karaoke_data_analyze.ipynb`): 서울시 양천구 노래연습장 인허가 공공데이터 분석
+- 사용 패키지는 `requirements.txt` 참고
+
+학습 메모는 [memo.md](memo.md) 참고.
+
+---
+
+## 환경 설정 — 폴더별 격리 venv
+
+전역 환경이 없습니다. 각 실습 폴더가 **자체 `requirements.txt` 와 `.venv/`** 를 가집니다
+(`.venv/` 는 git 제외). 어떤 폴더의 노트북을 다루기 전에 그 폴더 기준으로 환경을 만듭니다.
+
+```powershell
+cd 0601                       # 작업할 날짜 폴더
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+```
+
+- `requirements.txt` 가 없는 폴더(0522, 0528)는 인접 폴더(0527/0601)의 환경을 재사용하거나 필요한 패키지만 설치합니다.
+- 평탄화 클론(`mslearn-openai/`, `mslearn-ai-agents/`, `0610/Preprocessing-excersize-main/`)은 `requirements.txt`·`.env` 가 **패키지/실습 하위 루트**에 있으니 그 위치에서 venv(`labenv/` 등, git 제외)를 만들고 키를 채웁니다.
+- **Playwright**(0527) 동적 크롤링은 브라우저 바이너리가 추가로 필요합니다: `playwright install`
+- **OpenCV**(0611, `cv2`)는 GUI 창을 띄우는 스크립트라 노트북이 아닌 `py` 실행 전제이며, `cv.imread()` 는 **현재 작업 디렉토리(cwd)** 기준으로 경로를 찾습니다.
+- `requirements.txt` 는 직접 손으로 편집하지 말고, 해당 폴더 venv 에서 `pip freeze > requirements.txt` 로 재생성합니다.
+
+> **설치 환경 = 실행 환경** 을 반드시 일치시키세요. 다른 venv 가 활성화된 상태로 실행하면
+> 설치한 패키지를 못 찾는 `ModuleNotFoundError` 가 납니다. 프롬프트의 `(.venv)` 표시로 활성 환경을 확인하세요.
+
+---
+
+## 🔐 비밀키·환경변수 (public 저장소)
+
+이 저장소는 **공개**입니다. Azure 키·엔드포인트·토큰을 **코드나 노트북에 절대 하드코딩하지 마세요.**
+
+- 실제 값은 각 폴더의 **`.env`** 에 넣고 `os.getenv(...)` 로 읽습니다(`python-dotenv`). `.env` 는 `.gitignore` 로 전역 제외됩니다.
+- 필요한 변수 이름은 각 폴더의 **`.env.example`**(0701·0702·0703 등)을 복사해 `.env` 로 채우세요.
+- **커밋 전 시크릿 차단 훅**을 활성화하면 실수로 키를 커밋하는 것을 막아 줍니다(한 번만):
+
+  ```powershell
+  git config core.hooksPath .githooks
+  ```
+
+  `.githooks/pre-commit` 이 스테이징된 변경에서 Azure 키·`sk-` 토큰·개인키 등을 탐지해 커밋을 차단합니다.
+- 노트북 **출력 셀**에도 키가 남을 수 있으니 커밋 전 확인하세요. 이미 유출된 키는 파일에서 지워도 히스토리에 남으니 **Azure 포털에서 즉시 재발급**하세요.
+
+---
+
+## 데이터 파일 규칙 (git 추적 제외)
+
+대용량 데이터셋은 git 에 올리지 않습니다. 저장소 루트 `.gitignore` 가 이를 강제합니다:
+
+- `**/*-data/*.csv`, `*.json` 은 무시, 단 같은 폴더의 `README.md` 는 추적(출처·배치 안내용).
+- 데이터가 필요한 노트북은 `*-data/` 폴더 README 안내대로 사용자가 직접 파일을 배치하는 구조이므로,
+  노트북이 데이터 경로에서 `FileNotFoundError` 를 내도 그것이 정상일 수 있습니다 — 임의로 데이터를 생성하지 말고 README 의 출처를 확인하세요.
+
+---
+
+## 새 실습 추가 규칙
+
+- 새 실습은 `MMDD/` 폴더를 만들어 추가합니다 (각 날짜 = 부트캠프 하루).
+- 각 실습 폴더는 자체 `requirements.txt` 와 `.venv/` 를 유지합니다 (의존성 격리).
+- `venv/`, `.venv/`, `.claude/`, `__pycache__/`, `.ipynb_checkpoints/`, `.gradio/` 등은 `.gitignore` 로 제외됩니다.
+- 대용량 데이터(CSV/JSON)는 git 에 올리지 않고, `*-data/` 폴더에 README 로 출처·배치 방법을 남깁니다.
+- 폴더·파일 추가 시 이 README 의 디렉토리 구조와 학습 요약도 함께 업데이트합니다.
+
+---
+
+## 저장소 루트 부속 파일
+
+- **`CLAUDE.md`** — Claude Code 작업 가이드(저장소 성격·구조 규칙·환경 + VSCode PDF 설정 상세).
+- **`study_docs_link`** — 외부배포금지 강의교안 심볼릭 링크(내용은 미추적). 대상 폴더명·계층이 수시로 재구성되니 경로 하드코딩 금지, 그때그때 탐색(한글 NFC/NFD 정규화 차이 주의).
+- **`.vscode/`** — 심볼릭 링크 폴더의 PDF 를 외부 앱으로 여는 자가 치유 태스크(`open-external.ps1` + `Ctrl+Alt+O`). 자세한 원리는 `CLAUDE.md` 참고.
+
+---
+
+## 참고
+
+- GitHub: `gunnysis/sesacstudy`
+- 학습 과정: 새싹(SeSAC) AI 부트캠프

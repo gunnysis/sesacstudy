@@ -4,7 +4,8 @@
 0601/병원정보.txt
 DL3_20241006/
 
-# Symbolic links (로컬 절대경로 — 추적 금지)
+# Symbolic links (로컬 절대경로 — 추적 금지, 심볼릭 링크 파일 자체도 제외)
+study_docs_link
 study_docs_link/
 first_project_3team
 
@@ -28,6 +29,9 @@ env/
 .venv/
 .env/
 virtualenv/venv/
+
+# Gradio 자동생성물 (self-signed 인증서·flagged 데이터 등 — 재현 가능, 추적 불필요)
+.gradio/
 
 # Python
 __pycache__/
