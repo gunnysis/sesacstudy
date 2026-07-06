@@ -82,7 +82,7 @@ winget install Microsoft.VisualStudio.BuildTools --override " --passive --wait -
 	1. 작업 폴더로 이동
 
 		 ```powershell
-		 cd C:\Users\EL066\sesac\dev\sesacstudy\0611
+		 cd 0611   # 저장소 루트 기준
 		 ```
 
 	2. 가상환경이 없으면 생성 (Windows에서):
