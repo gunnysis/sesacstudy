@@ -5,8 +5,12 @@
 import azure.cognitiveservices.speech as speechsdk
 from dotenv import load_dotenv
 import os
+from pathlib import Path
 
 load_dotenv()
+
+# 이 스크립트가 있는 폴더 기준 경로 (사용자/절대경로 하드코딩 제거)
+BASE_DIR = Path(__file__).resolve().parent
 
 # Creates an instance of a speech config with specified subscription key and service region.
 speech_key = os.getenv("SPEECH_KEY")
@@ -20,11 +24,11 @@ speech_config = speechsdk.SpeechConfig(subscription=speech_key, region=service_r
 
 speech_synthesizer = speechsdk.SpeechSynthesizer(speech_config=speech_config)
 
-ssml_string = open("C:\\Users\\EL066\\sesac\\dev\\sesacstudy\\0703\\ssml.xml", "r", encoding="utf-8").read()
+ssml_string = open(BASE_DIR / "ssml.xml", "r", encoding="utf-8").read()
 speech_synthesis_result = speech_synthesizer.speak_ssml_async(ssml_string).get()
 
 stream = speechsdk.AudioDataStream(speech_synthesis_result)
-stream.save_to_wav_file("C:\\Users\\EL066\\sesac\\dev\\sesacstudy\\0703\\audiofile.wav")
+stream.save_to_wav_file(str(BASE_DIR / "audiofile.wav"))
 
 # # use the default speaker as audio output.
 # speech_synthesizer = speechsdk.SpeechSynthesizer(speech_config=speech_config)
