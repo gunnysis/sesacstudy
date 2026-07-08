@@ -155,3 +155,12 @@ winget install Microsoft.VisualStudio.BuildTools --override " --passive --wait -
 		python -m pip install --upgrade pip
 		```
 
+
+## 7. Azure Custom Vision — 학습이 몇 시간씩 안 끝날 때 (2026-07-08)
+
+- 정상 학습 시간 기준: 태그 3개 × 이미지 ~90장 규모에서 **약 9분** (폴링 타임아웃 20분 권장). 이보다 크게 초과하면 백엔드 wedge 를 의심.
+- 흔한 원인 3가지:
+	1. **학습이 돌고 있는데 그 프로젝트의 이미지를 삭제/변경** → 이터레이션이 `Training` 에서 수 시간 멈추고 프로젝트 학습 큐가 wedge 됨. 반드시 이전 이터레이션이 Completed/Failed 된 뒤 데이터 변경.
+	2. 매 실행 `force_train=True` → 불필요한 재학습 반복 + **이터레이션 상한(프로젝트당 20개, F0/S0 공통)** 도달 시 학습 거부. 변경 없으면 `Nothing changed` 를 정상 처리해 기존 모델 재사용.
+	3. 포털에서 만든 프로젝트의 **도메인 종류 불일치** — Classification 프로젝트에는 객체탐지(리전 업로드·detect_image) 불가, 타입은 생성 후 변경 불가라 새로 만들어야 함.
+- 상세 기록: [0706/custom-vision/TROUBLESHOOTING.md](0706/custom-vision/TROUBLESHOOTING.md)

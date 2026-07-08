@@ -67,7 +67,29 @@ sesacstudy/
 │   │   ├── test_stt.py             # Speech 인증 확인용 스크립트
 │   │   └── speech-chatbot.ipynb    # Gradio STT + Azure OpenAI 챗봇 UI
 │   └── .env                        # SPEECH_KEY·REGION·AZURE_OPENAI_* (git 제외, venv/ 도 제외)
-├── 0706/                       # (예정 — 빈 폴더)
+├── 0706/                       # Azure Custom Vision — 객체 탐지 (fork·scissors·glasses)
+│   └── custom-vision/
+│       ├── main.py                 # 파이프라인 엔트리포인트 (argparse CLI: --refresh-glasses·--force)
+│       ├── cvpipeline/             # 기능별 모듈 패키지
+│       │   ├── config.py               # .env·클라이언트·상수
+│       │   ├── project_setup.py        # 도메인/프로젝트/태그 get-or-create (+ObjectDetection 도메인 검증)
+│       │   ├── regions.py              # fork·scissors 고정 바운딩 박스 좌표
+│       │   ├── glasses_detect.py       # OpenCV Haar cascade 안경 박스 자동 검출
+│       │   ├── glasses_labels.py       # glasses 라벨 소스 우선순위(YOLO .txt > CSV > cascade)
+│       │   ├── images.py               # 업로드 엔트리 구성·삭제·배치 업로드
+│       │   ├── audit.py                # 학습 전 라벨링 점검(진단)
+│       │   ├── training.py             # 진행중 대기·완료 폴링(20분 타임아웃)·이터레이션 정리
+│       │   ├── publish.py              # 이터레이션 게시(이름 점유 시 재게시)
+│       │   ├── prediction.py           # 예측 + 바운딩 박스 시각화
+│       │   └── pipeline.py             # 위 단계 조립(train_and_publish·predict_images)
+│       ├── augment_glasses.py      # glasses 오프라인 증강(반전·밝기 — 권장 50장 확보)
+│       ├── augment_forkscissors.py # fork·scissors 증강(반전 시 박스 좌표 변환 → YOLO .txt 사이드카)
+│       ├── validate_retrain.py     # 재학습 격리 검증용 임시 러너
+│       ├── TROUBLESHOOTING.md      # 학습 stuck 장애 디버깅 기록(원인·수정·검증·재발방지)
+│       ├── Images/                 # fork·scissors·glasses 학습용 + test 예측용
+│       ├── requirements.txt        # azure-...-customvision·opencv-python 등
+│       ├── .env.example            # 채울 환경변수 목록(키 없음)
+│       └── .env                    # VISION_TRAINING/PREDICTION_*·VISION_PROJECT_NAME (git 제외)
 │
 ├── alone/                      # 개인 프로젝트 (날짜 실습과 별개)
 │   ├── eundunhealth-user-flow-diagram.ipynb  # 멘탈헬스 앱 Mermaid 사용자 플로우
@@ -173,6 +195,21 @@ sesacstudy/
 - `speech-services/speech-chatbot.ipynb`: **Gradio** UI 로 STT + **Azure OpenAI** 챗봇 결합 — 마이크 녹음을 STT 로 인식해 텍스트박스에 넣고, `AzureOpenAI` chat completions 로 대화. `demo.launch(share=True)` 로 공유 링크 생성
 - 환경변수(`.env`): `SPEECH_KEY`·`REGION`/`SERVICE_REGION`·`ENDPOINT`, 챗봇은 추가로 `AZURE_OPENAI_ENDPOINT`·`AZURE_OPENAI_KEY`·`DEPLOY_NAME` 필요 — 모두 git 제외
 - 노트북은 셀에서 `%pip install` 로 의존성(`gradio`·`azure-cognitiveservices-speech`·`openai`·`ipywidgets` 등)을 직접 설치, `speech-services/venv/` 가상환경은 git 제외
+
+### 0706 — Azure Custom Vision (객체 탐지)
+
+- **Azure Custom Vision** 으로 **객체 탐지(Object Detection)** 모델을 학습·게시·예측하는 실습 — `fork`·`scissors`·`glasses` 3개 태그 (도메인: General / ObjectDetection)
+- 원본은 공식 [객체 탐지 퀵스타트](https://learn.microsoft.com/ko-kr/azure/ai-services/custom-vision-service/quickstarts/object-detection?pivots=programming-language-python) 기반 단일 파일이었으며, 이를 **기능별 모듈 패키지(`cvpipeline/`) + 엔트리포인트(`main.py`)로 리팩토링**
+  - `config`(설정)·`project_setup`(프로젝트/태그)·`regions`(fork·scissors 고정 좌표)·`glasses_detect`(안경 박스 자동 검출)·`glasses_labels`(라벨 소스 우선순위)·`images`(업로드)·`audit`(라벨 점검)·`training`(학습)·`publish`(게시)·`prediction`(시각화)·`pipeline`(조립)
+- **fork·scissors** 는 이미지마다 정밀 바운딩 박스 좌표를 지정하고, **glasses** 는 실제 어노테이션(YOLO `.txt`/`_annotations.csv`)이 있으면 그것을, 없으면 **OpenCV Haar cascade**(안경 대응 눈 검출기)로 안경 영역을 자동 검출해 박스를 만든다(파일별 자동 — 좌표 하드코딩 불필요). 폴더에 사진을 넣기만 하면 반영됨
+  - 현재 glasses 50장은 원본 데이터셋의 **실제 어노테이션**(`Images/glasses/_annotations.csv`, 픽셀 xyxy → 정규화 변환)을 사용 — cascade 추정보다 정확
+  - 세 태그 모두 **권장 50장** 충족: fork·scissors 는 `augment_forkscissors.py` 증강(반전 시 `left' = 1 - left - width` 로 박스도 변환, YOLO `.txt` 사이드카로 저장)으로 20→50장
+- 재실행 안전 설계(트러블슈팅 반영 — 상세는 [TROUBLESHOOTING.md](0706/custom-vision/TROUBLESHOOTING.md)): **진행 중 학습을 이미지 변경 '전'에 대기**(학습 중 참조 이미지 삭제로 인한 백엔드 stuck 방지 — 근본 원인), 변경 없으면 학습 생략하고 기존 모델 재사용(`Nothing changed` 정상 처리), 프로젝트/태그 **get-or-create** + **ObjectDetection 도메인 검증**(Classification 프로젝트 오지정 시 조기 실패), 학습 폴링 **20분 타임아웃**, **이터레이션 자동 정리**(프로젝트당 20개 상한 보호), 이름 점유 시 unpublish 후 재게시
+- 학습 전 **라벨 자동 점검**(`audit.py`): 리전 없는 이미지·너무 작은/이미지 밖 박스·규격(최소 256px)·권장(태그당 50+) 미달을 경고
+- 실행: `python main.py [임계값 0~1] [테스트이미지경로]` (인자 없으면 test 폴더의 `test_*` 전체 예측) — 결과는 `Images/test/prediction_<이름>.png` 로 저장. glasses 박스 로직을 바꿨으면 `--refresh-glasses`(삭제 후 재업로드), 강제 재학습은 `--force`
+- 환경변수(`.env`, 목록은 `.env.example` 참고): `VISION_TRAINING_ENDPOINT`·`VISION_TRAINING_KEY`·`VISION_PREDICTION_ENDPOINT`·`VISION_PREDICTION_KEY`·`VISION_PREDICTION_RESOURCE_ID`·`VISION_PROJECT_NAME`(선택 `VISION_PROJECT_ID`) (git 제외)
+- 사용 패키지: `azure-cognitiveservices-vision-customvision`·`opencv-python`·`matplotlib`·`Pillow`·`python-dotenv` (`requirements.txt` 참고)
+- ⚠ Azure Custom Vision 은 **2028-09-25 지원 종료 예정**(공식 공지) — 장기적으로 Azure Machine Learning AutoML 등으로 전환 권장
 
 ### Azure AI 실습 — mslearn-openai · mslearn-ai-agents
 
