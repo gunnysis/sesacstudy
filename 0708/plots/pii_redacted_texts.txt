@@ -1,0 +1,12 @@
+Document 0 PII entities:
+  - kim minseok (Person, conf=1.00)
+
+Document 1 PII entities:
+  - 010-1234-5678 (PhoneNumber, conf=1.00)
+
+Document 2 PII entities:
+  - 서울특별시 강남구 테헤란로 123 (Address, conf=0.99)
+
+Document 3 PII entities:
+  - 1234-5678-9012 (PhoneNumber, conf=0.65)
+

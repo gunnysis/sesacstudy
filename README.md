@@ -92,6 +92,16 @@ sesacstudy/
 │       ├── .env.example            # 채울 환경변수 목록(키 없음)
 │       └── .env                    # VISION_TRAINING/PREDICTION_*·VISION_PROJECT_NAME (git 제외)
 │
+├── 0708/                       # Azure AI Language — NER·PII 인식 + 시각화 + Gradio 웹앱
+│   ├── quick_start/                # 공식 퀵스타트 원형 (ner.py·pii.py)
+│   ├── ner_utils/                  # 공용 패키지 (Azure 클라이언트·문서 로딩·플롯 헬퍼)
+│   ├── visualize_output.py         # CLI: NER/PII 실행 → plots/ 에 요약 플롯 저장
+│   ├── app.py                      # Gradio 웹앱 — 텍스트박스 입력 → 결과 표·플롯·PII 리포트
+│   ├── test.txt                    # 예시 입력 (한 줄당 문서 하나)
+│   ├── plots/                      # CLI 출력 결과물 (플롯 PNG·PII 리포트)
+│   ├── .env.example                # 채울 환경변수 목록(키 없음)
+│   └── .env                        # LANGUAGE_KEY·LANGUAGE_ENDPOINT (git 제외)
+│
 ├── alone/                      # 개인 프로젝트 (날짜 실습과 별개)
 │   ├── eundunhealth-user-flow-diagram.ipynb  # 멘탈헬스 앱 Mermaid 사용자 플로우
 │   ├── karaoke_data_analyze.ipynb            # 노래연습장 인허가 공공데이터 분석
@@ -212,6 +222,17 @@ sesacstudy/
 - 환경변수(`.env`, 목록은 `.env.example` 참고): `VISION_TRAINING_ENDPOINT`·`VISION_TRAINING_KEY`·`VISION_PREDICTION_ENDPOINT`·`VISION_PREDICTION_KEY`·`VISION_PREDICTION_RESOURCE_ID`·`VISION_PROJECT_NAME`(선택 `VISION_PROJECT_ID`) (git 제외)
 - 사용 패키지: `azure-cognitiveservices-vision-customvision`·`opencv-python`·`matplotlib`·`Pillow`·`python-dotenv` (`requirements.txt` 참고)
 - ⚠ Azure Custom Vision 은 **2028-09-25 지원 종료 예정**(공식 공지) — 장기적으로 Azure Machine Learning AutoML 등으로 전환 권장
+
+### 0708 — Azure AI Language (NER·PII) + Gradio 웹앱
+
+- **Azure AI Language(Text Analytics)** 로 **NER(엔터티 인식)** 과 **PII(개인정보) 인식**을 실행하고 결과를 시각화하는 실습
+- `quick_start/`(공식 퀵스타트 원형) → `ner_utils/` 공용 패키지 + `visualize_output.py` CLI 로 리팩토링 → `app.py` **Gradio 웹앱**으로 확장하는 3단계 구성
+  - `ner_utils/`: `azure_text_analytics`(인증·응답→DataFrame 변환·문서별 병합), `file_utils`(문서 로딩), `visualization`(한글 폰트 선택·팔레트 검증·요약 플롯·PII 리포트)
+- CLI: `python visualize_output.py -i test.txt --pii` — 카테고리별 개수·신뢰도 분포·길이 분포·PII 상위 텍스트 플롯과 문서별 PII 리포트를 `plots/` 에 저장 (`--list-palettes`·`--palette`·`--font` 옵션)
+- **Gradio 웹앱**(`python app.py` → `http://127.0.0.1:7860`): 파일 대신 **텍스트박스에 한 줄당 문서 하나**를 입력받아 NER/PII 결과 표(DataFrame)·요약 플롯(**gr.Plot** — matplotlib Figure 직접 렌더링)·문서별 PII 리포트를 탭으로 표시. PII 실행 여부·언어 힌트·팔레트를 UI 에서 선택, `demo.launch(share=True)` 로 공유 링크 생성 가능
+- seaborn 0.13+ 대응: `hue` 없이 `palette` 만 넘기는 deprecated 패턴을 `hue=…, legend=False` 로 정리
+- 환경변수(`.env`, 목록은 `.env.example` 참고): `LANGUAGE_KEY`·`LANGUAGE_ENDPOINT` (git 제외)
+- 사용 패키지: `azure-ai-textanalytics`·`pandas`·`matplotlib`·`seaborn`·`gradio`·`python-dotenv` (`requirements.txt` 참고)
 
 ### Azure AI 실습 — mslearn-openai · mslearn-ai-agents
 
