@@ -9,6 +9,12 @@ from .azure_text_analytics import (
     recognize_pii_df,
 )
 from .file_utils import load_documents_from_file, split_into_documents
+from .plotly_figures import (
+    make_confidence_plotly,
+    make_count_by_category_plotly,
+    make_length_by_category_plotly,
+    make_pii_top_texts_plotly,
+)
 from .visualization import (
     build_pii_report_text,
     choose_font,
@@ -32,6 +38,10 @@ __all__ = [
     'recognize_pii_df',
     'load_documents_from_file',
     'split_into_documents',
+    'make_confidence_plotly',
+    'make_count_by_category_plotly',
+    'make_length_by_category_plotly',
+    'make_pii_top_texts_plotly',
     'build_pii_report_text',
     'choose_font',
     'get_recommended_palettes',

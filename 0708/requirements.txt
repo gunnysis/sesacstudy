@@ -34,12 +34,14 @@ MarkupSafe==3.0.3
 matplotlib==3.11.0
 mdurl==0.1.2
 msrest==0.7.1
+narwhals==2.23.0
 numpy==2.5.1
 oauthlib==3.3.1
 orjson==3.11.9
 packaging==26.2
 pandas==3.0.3
 pillow==12.3.0
+plotly==6.8.0
 pydantic==2.13.4
 pydantic_core==2.46.4
 pydub==0.25.1
