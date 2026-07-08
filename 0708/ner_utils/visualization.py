@@ -16,6 +16,16 @@ import seaborn as sns
 
 DEFAULT_PALETTE = 'deep'
 
+# 추천 팔레트 — seaborn 기본, 정성적(qualitative), matplotlib 컬러맵 순
+SEABORN_PALETTES = ['deep', 'muted', 'pastel', 'bright', 'dark', 'colorblind']
+QUALITATIVE_PALETTES = ['Set1', 'Set2', 'Set3', 'Pastel1', 'Pastel2']
+MATPLOTLIB_COLORMAPS = ['viridis', 'plasma', 'inferno', 'magma', 'cividis']
+RECOMMENDED_PALETTES = SEABORN_PALETTES + QUALITATIVE_PALETTES + MATPLOTLIB_COLORMAPS
+
+# 막대 위 값 라벨 스타일
+BAR_LABEL_FONTSIZE = 9
+BAR_LABEL_OFFSET_POINTS = (0, 3)
+
 # 한글 지원 가능성이 높은 폰트 후보 (우선순위 순)
 KOREAN_FONT_CANDIDATES = [
     'Malgun Gothic',
@@ -44,24 +54,24 @@ def save_fig(fig, path: Path) -> None:
 
 def add_bar_labels(ax, font_prop=None) -> None:
     """막대그래프의 각 막대 위에 값을 표시합니다."""
-    for p in ax.patches:
-        height = int(p.get_height())
+    for bar in ax.patches:
+        height = int(bar.get_height())
         if height <= 0:
             continue
         kwargs = dict(
             ha='center',
             va='bottom',
-            fontsize=9,
+            fontsize=BAR_LABEL_FONTSIZE,
             color='black',
-            xytext=(0, 3),
+            xytext=BAR_LABEL_OFFSET_POINTS,
             textcoords='offset points',
         )
         if font_prop is not None:
             kwargs['fontproperties'] = font_prop
-        ax.annotate(f'{height}', (p.get_x() + p.get_width() / 2., height), **kwargs)
+        ax.annotate(f'{height}', (bar.get_x() + bar.get_width() / 2., height), **kwargs)
 
 
-def style_axes(ax, title: str, xlabel: str = None, ylabel: str = None, font_prop=None, rotate_xticks: bool = False) -> None:
+def style_axes(ax, title: str, xlabel: str | None = None, ylabel: str | None = None, font_prop=None, rotate_xticks: bool = False) -> None:
     """제목·축 라벨·눈금 라벨에 일관된 스타일(폰트 포함)을 적용합니다."""
     ax.set_title(title, fontproperties=font_prop)
     if xlabel is not None:
@@ -75,33 +85,37 @@ def style_axes(ax, title: str, xlabel: str = None, ylabel: str = None, font_prop
             lbl.set_fontproperties(font_prop)
 
 
-def choose_font(preferred: str = None):
+def _apply_font_rcparams(font_name: str) -> None:
+    """선택된 폰트를 matplotlib 전역 설정에 적용합니다."""
+    plt.rcParams['font.family'] = font_name
+    plt.rcParams['font.sans-serif'] = [font_name]
+    plt.rcParams['axes.unicode_minus'] = False
+
+
+def choose_font(preferred: str | None = None):
     """한글을 지원하는 폰트를 선택해 matplotlib 전역에 적용합니다.
 
     preferred 가 설치돼 있으면 우선 사용하고, 없으면 후보 목록에서 찾습니다.
     (font_name, FontProperties 또는 None) 튜플을 반환합니다.
     """
-    available = {f.name for f in fm.fontManager.ttflist}
+    available = {font.name for font in fm.fontManager.ttflist}
     candidates = ([preferred] if preferred else []) + KOREAN_FONT_CANDIDATES
+    chosen = next((name for name in candidates if name in available), None)
 
-    for name in candidates:
-        if name not in available:
-            continue
-        plt.rcParams['font.family'] = name
-        plt.rcParams['font.sans-serif'] = [name]
+    if chosen is None:
         plt.rcParams['axes.unicode_minus'] = False
-        try:
-            font_path = fm.findfont(name)
-            return name, fm.FontProperties(fname=font_path, family=name)
-        except Exception:
-            return name, fm.FontProperties(family=name)
+        print(
+            'Warning: No known Korean-capable fonts found in the system font list. '
+            'Korean text may render incorrectly.'
+        )
+        return '', None
 
-    plt.rcParams['axes.unicode_minus'] = False
-    print(
-        'Warning: No known Korean-capable fonts found in the system font list. '
-        'Korean text may render incorrectly.'
-    )
-    return '', None
+    _apply_font_rcparams(chosen)
+    try:
+        font_path = fm.findfont(chosen)
+        return chosen, fm.FontProperties(fname=font_path, family=chosen)
+    except Exception:
+        return chosen, fm.FontProperties(family=chosen)
 
 
 def validate_palette(palette_name: str) -> str:
@@ -110,20 +124,16 @@ def validate_palette(palette_name: str) -> str:
         sns.color_palette(palette_name)
         return palette_name
     except Exception:
-        examples = ['deep', 'muted', 'pastel', 'bright', 'dark', 'colorblind', 'Set2', 'Pastel1']
         print(
             f"Warning: '{palette_name}' is not a valid palette. "
-            f"Falling back to '{DEFAULT_PALETTE}'. Try: {', '.join(examples)}"
+            f"Falling back to '{DEFAULT_PALETTE}'. Try: {', '.join(RECOMMENDED_PALETTES)}"
         )
         return DEFAULT_PALETTE
 
 
-def get_recommended_palettes():
+def get_recommended_palettes() -> list[str]:
     """추천 seaborn/matplotlib 팔레트 이름 목록을 반환합니다."""
-    seaborn_palettes = ['deep', 'muted', 'pastel', 'bright', 'dark', 'colorblind']
-    qualitative = ['Set1', 'Set2', 'Set3', 'Pastel1', 'Pastel2']
-    matplotlib_maps = ['viridis', 'plasma', 'inferno', 'magma', 'cividis']
-    return seaborn_palettes + qualitative + matplotlib_maps
+    return list(RECOMMENDED_PALETTES)
 
 
 # ---------------------------------------------------------------------------
@@ -131,16 +141,17 @@ def get_recommended_palettes():
 # plt.close(fig) 는 pyplot 전역 상태에서 분리할 뿐, 이후 savefig/렌더링은 가능합니다.
 # ---------------------------------------------------------------------------
 
-def make_count_by_category_fig(df, category_col: str, title: str,palette: str = DEFAULT_PALETTE, font_prop=None):
+def make_count_by_category_fig(df, category_col: str, title: str,
+                               palette: str = DEFAULT_PALETTE, font_prop=None):
     """카테고리별 개수 countplot Figure (공통 스타일 + 값 라벨)."""
     fig, ax = plt.subplots(figsize=(8, 5))
     order = df[category_col].value_counts().index
     # seaborn 0.13+: hue 없이 palette 만 주면 deprecated — hue 지정 후 범례 숨김
-    sns.countplot(data=df, x=category_col, order=order, 
-                hue=category_col, hue_order=order,
-                palette=palette, legend=False, ax=ax)
+    sns.countplot(data=df, x=category_col, order=order,
+                  hue=category_col, hue_order=order,
+                  palette=palette, legend=False, ax=ax)
     style_axes(ax, title, xlabel='Category', ylabel='Count',
-            font_prop=font_prop, rotate_xticks=True)
+               font_prop=font_prop, rotate_xticks=True)
     add_bar_labels(ax, font_prop=font_prop)
     fig.tight_layout()
     plt.close(fig)
@@ -151,9 +162,9 @@ def make_confidence_fig(df, palette: str = DEFAULT_PALETTE, font_prop=None):
     """신뢰도 점수 분포 histplot Figure."""
     fig, ax = plt.subplots(figsize=(8, 5))
     sns.histplot(df['confidence'], bins=20, kde=True,
-                color=sns.color_palette(palette)[0], ax=ax)
+                 color=sns.color_palette(palette)[0], ax=ax)
     style_axes(ax, 'Confidence Score Distribution',
-            xlabel='Confidence', ylabel='Count', font_prop=font_prop)
+               xlabel='Confidence', ylabel='Count', font_prop=font_prop)
     fig.tight_layout()
     plt.close(fig)
     return fig
@@ -165,8 +176,8 @@ def make_length_by_category_fig(df, palette: str = DEFAULT_PALETTE, font_prop=No
     sns.boxplot(data=df, x='category', y='length',
                 hue='category', palette=palette, legend=False, ax=ax)
     style_axes(ax, 'Entity Length by Category',
-            xlabel='Category', ylabel='Length (chars)',
-            font_prop=font_prop, rotate_xticks=True)
+               xlabel='Category', ylabel='Length (chars)',
+               font_prop=font_prop, rotate_xticks=True)
     fig.tight_layout()
     plt.close(fig)
     return fig
@@ -185,14 +196,22 @@ def make_pii_top_texts_fig(df, palette: str = DEFAULT_PALETTE, font_prop=None, t
     return fig
 
 
+def _format_pii_entity_line(row) -> str:
+    """PII 엔터티 한 건을 리포트 한 줄로 포맷합니다."""
+    return f"  - {row['text']} ({row['category']}, conf={row['confidence']:.2f})"
+
+
 def build_pii_report_text(df) -> str:
     """문서별 PII 엔터티 목록을 리포트 문자열로 만듭니다."""
-    lines = []
-    for doc_id, grp in df.groupby('document_id'):
-        lines.append(f'Document {doc_id} PII entities:')
-        for _, row in grp.iterrows():
-            lines.append(f"  - {row['text']} ({row['category']}, conf={row['confidence']:.2f})")
-        lines.append('')
+    lines = [
+        line
+        for doc_id, group in df.groupby('document_id')
+        for line in (
+            [f'Document {doc_id} PII entities:']
+            + [_format_pii_entity_line(row) for _, row in group.iterrows()]
+            + ['']
+        )
+    ]
     return '\n'.join(lines) + '\n' if lines else ''
 
 
@@ -208,15 +227,17 @@ def plot_entity_overview(df, out_dir: Path, palette: str = DEFAULT_PALETTE, font
 
     sns.set_theme(style='whitegrid', palette=palette)
 
-    fig = make_count_by_category_fig(df, 'category', 'Entity Counts by Category',
-                                     palette=palette, font_prop=font_prop)
-    save_fig(fig, out_dir / 'entity_counts_by_category.png')
-
-    fig = make_confidence_fig(df, palette=palette, font_prop=font_prop)
-    save_fig(fig, out_dir / 'confidence_distribution.png')
-
-    fig = make_length_by_category_fig(df, palette=palette, font_prop=font_prop)
-    save_fig(fig, out_dir / 'length_by_category.png')
+    figures = [
+        (make_count_by_category_fig(df, 'category', 'Entity Counts by Category',
+                                    palette=palette, font_prop=font_prop),
+         'entity_counts_by_category.png'),
+        (make_confidence_fig(df, palette=palette, font_prop=font_prop),
+         'confidence_distribution.png'),
+        (make_length_by_category_fig(df, palette=palette, font_prop=font_prop),
+         'length_by_category.png'),
+    ]
+    for fig, filename in figures:
+        save_fig(fig, out_dir / filename)
 
 
 def write_pii_report(df, out_path: Path) -> None:
@@ -234,11 +255,14 @@ def plot_pii_overview(df, out_dir: Path, palette: str = DEFAULT_PALETTE, font_pr
 
     sns.set_theme(style='whitegrid', palette=palette)
 
-    fig = make_count_by_category_fig(df, 'category', 'PII Counts by Category',
-                                     palette=palette, font_prop=font_prop)
-    save_fig(fig, out_dir / 'pii_counts_by_category.png')
-
-    fig = make_pii_top_texts_fig(df, palette=palette, font_prop=font_prop)
-    save_fig(fig, out_dir / 'pii_top_texts.png')
+    figures = [
+        (make_count_by_category_fig(df, 'category', 'PII Counts by Category',
+                                    palette=palette, font_prop=font_prop),
+         'pii_counts_by_category.png'),
+        (make_pii_top_texts_fig(df, palette=palette, font_prop=font_prop),
+         'pii_top_texts.png'),
+    ]
+    for fig, filename in figures:
+        save_fig(fig, out_dir / filename)
 
     write_pii_report(df, out_dir / 'pii_redacted_texts.txt')

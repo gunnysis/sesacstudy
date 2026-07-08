@@ -8,13 +8,12 @@ import dotenv
 from ner_utils import (
     authenticate_client,
     choose_font,
-    collect_results_df,
-    extract_entities_to_df,
-    extract_pii_to_df,
     get_recommended_palettes,
     load_documents_from_file,
     plot_entity_overview,
     plot_pii_overview,
+    recognize_entities_df,
+    recognize_pii_df,
     validate_palette,
 )
 
@@ -42,18 +41,19 @@ def build_arg_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def resolve_documents(input_file: str | None) -> list[str]:
+    """--input-file 이 주어지면 파일에서, 아니면 기본 예제 문서를 반환합니다."""
+    return load_documents_from_file(Path(input_file)) if input_file else DEFAULT_DOCS
+
+
 def main():
     args = build_arg_parser().parse_args()
 
     if args.list_palettes:
-        for p in get_recommended_palettes():
-            print(p)
+        print('\n'.join(get_recommended_palettes()))
         return
 
-    if args.input_file:
-        docs = load_documents_from_file(Path(args.input_file))
-    else:
-        docs = DEFAULT_DOCS
+    docs = resolve_documents(args.input_file)
 
     chosen_font, font_prop = choose_font(args.font)
     if chosen_font:
@@ -63,14 +63,11 @@ def main():
     out_dir = Path(args.out_dir)
     client = authenticate_client()
 
-    ner_response = client.recognize_entities(documents=docs)
-    entity_df = collect_results_df(ner_response, extract_entities_to_df, 'Document')
+    entity_df = recognize_entities_df(client, docs)
     plot_entity_overview(entity_df, out_dir, palette=palette, font_prop=font_prop)
 
     if args.pii:
-        pii_kwargs = {'language': args.language} if args.language else {}
-        pii_response = client.recognize_pii_entities(documents=docs, **pii_kwargs)
-        pii_df = collect_results_df(pii_response, extract_pii_to_df, 'PII Document')
+        pii_df = recognize_pii_df(client, docs, language=args.language)
         plot_pii_overview(pii_df, out_dir, palette=palette, font_prop=font_prop)
 
 

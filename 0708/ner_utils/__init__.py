@@ -5,8 +5,10 @@ from .azure_text_analytics import (
     collect_results_df,
     extract_entities_to_df,
     extract_pii_to_df,
+    recognize_entities_df,
+    recognize_pii_df,
 )
-from .file_utils import load_documents_from_file
+from .file_utils import load_documents_from_file, split_into_documents
 from .visualization import (
     build_pii_report_text,
     choose_font,
@@ -26,7 +28,10 @@ __all__ = [
     'collect_results_df',
     'extract_entities_to_df',
     'extract_pii_to_df',
+    'recognize_entities_df',
+    'recognize_pii_df',
     'load_documents_from_file',
+    'split_into_documents',
     'build_pii_report_text',
     'choose_font',
     'get_recommended_palettes',
