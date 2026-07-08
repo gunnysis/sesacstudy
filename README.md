@@ -94,10 +94,11 @@ sesacstudy/
 │
 ├── 0708/                       # Azure AI Language — NER·PII 인식 + 시각화 + Gradio 웹앱
 │   ├── quick_start/                # 공식 퀵스타트 원형 (ner.py·pii.py)
-│   ├── ner_utils/                  # 공용 패키지 (Azure 클라이언트·문서 로딩·플롯 헬퍼)
+│   ├── ner_utils/                  # 공용 패키지 (Azure 클라이언트·문서 로딩·플롯: matplotlib=CLI·Plotly=웹앱)
 │   ├── visualize_output.py         # CLI: NER/PII 실행 → plots/ 에 요약 플롯 저장
 │   ├── app.py                      # Gradio 웹앱 — 텍스트박스 입력 → 결과 표·플롯·PII 리포트
 │   ├── test.txt                    # 예시 입력 (한 줄당 문서 하나)
+│   ├── REFACTORING.md              # 리팩토링 + Plotly 전환 기록 (기법별 before/after·검증)
 │   ├── plots/                      # CLI 출력 결과물 (플롯 PNG·PII 리포트)
 │   ├── .env.example                # 채울 환경변수 목록(키 없음)
 │   └── .env                        # LANGUAGE_KEY·LANGUAGE_ENDPOINT (git 제외)
@@ -227,12 +228,13 @@ sesacstudy/
 
 - **Azure AI Language(Text Analytics)** 로 **NER(엔터티 인식)** 과 **PII(개인정보) 인식**을 실행하고 결과를 시각화하는 실습
 - `quick_start/`(공식 퀵스타트 원형) → `ner_utils/` 공용 패키지 + `visualize_output.py` CLI 로 리팩토링 → `app.py` **Gradio 웹앱**으로 확장하는 3단계 구성
-  - `ner_utils/`: `azure_text_analytics`(인증·응답→DataFrame 변환·문서별 병합), `file_utils`(문서 로딩), `visualization`(한글 폰트 선택·팔레트 검증·요약 플롯·PII 리포트)
+  - `ner_utils/`: `azure_text_analytics`(인증·응답→DataFrame 변환·문서별 병합), `file_utils`(문서 로딩), `visualization`(한글 폰트 선택·팔레트 검증·matplotlib 요약 플롯·PII 리포트 — CLI 용), `plotly_figures`(Plotly Figure 빌더 — Gradio 웹앱 용)
 - CLI: `python visualize_output.py -i test.txt --pii` — 카테고리별 개수·신뢰도 분포·길이 분포·PII 상위 텍스트 플롯과 문서별 PII 리포트를 `plots/` 에 저장 (`--list-palettes`·`--palette`·`--font` 옵션)
-- **Gradio 웹앱**(`python app.py` → `http://127.0.0.1:7860`): 파일 대신 **텍스트박스에 한 줄당 문서 하나**를 입력받아 NER/PII 결과 표(DataFrame)·요약 플롯(**gr.Plot** — matplotlib Figure 직접 렌더링)·문서별 PII 리포트를 탭으로 표시. PII 실행 여부·언어 힌트·팔레트를 UI 에서 선택, `demo.launch(share=True)` 로 공유 링크 생성 가능
+- **Gradio 웹앱**(`python app.py` → `http://127.0.0.1:7860`): 파일 대신 **텍스트박스에 한 줄당 문서 하나**를 입력받아 NER/PII 결과 표(DataFrame)·요약 플롯(**gr.Plot** — **Plotly** Figure 를 반환해 줌·호버 툴팁이 되는 인터랙티브 차트로 렌더링, [공식 문서](https://gradio.app/docs/gradio/plot) 기준 `format` 파라미터는 matplotlib 전용이라 미사용)·문서별 PII 리포트를 탭으로 표시. 팔레트 드롭다운(seaborn 팔레트 이름)은 `sns.color_palette(...).as_hex()` 로 Plotly 색 목록으로 변환해 그대로 동작. CLI 의 PNG 저장은 matplotlib 유지 — Plotly 는 웹앱에서만 사용. PII 실행 여부·언어 힌트·팔레트를 UI 에서 선택, `demo.launch(share=True)` 로 공유 링크 생성 가능
 - seaborn 0.13+ 대응: `hue` 없이 `palette` 만 넘기는 deprecated 패턴을 `hue=…, legend=False` 로 정리
+- **리팩토링**([CodeSee Python Refactoring](https://www.codesee.io/learning-center/python-refactoring) 기준): 메서드 추출(`analyze()` 분해·`recognize_entities_df`/`recognize_pii_df`/`split_into_documents` 공용화로 앱·CLI 중복 제거), 조건문 단순화(guard clause·`next()`+제너레이터), 컴프리헨션, 매직 값→명명 상수 — 상세는 [0708/REFACTORING.md](0708/REFACTORING.md)
 - 환경변수(`.env`, 목록은 `.env.example` 참고): `LANGUAGE_KEY`·`LANGUAGE_ENDPOINT` (git 제외)
-- 사용 패키지: `azure-ai-textanalytics`·`pandas`·`matplotlib`·`seaborn`·`gradio`·`python-dotenv` (`requirements.txt` 참고)
+- 사용 패키지: `azure-ai-textanalytics`·`pandas`·`matplotlib`·`seaborn`·`plotly`·`gradio`·`python-dotenv` (`requirements.txt` 참고)
 
 ### Azure AI 실습 — mslearn-openai · mslearn-ai-agents
 
