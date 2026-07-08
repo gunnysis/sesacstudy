@@ -50,7 +50,7 @@ def train_and_publish(trainer, project, refresh_glasses=False, force=False):
     return iteration
 
 
-def predict_images(predictor, project, test_image_paths, threshold, test_dir):
-    """주어진 이미지들을 각각 예측하고 바운딩 박스 시각화 PNG 를 저장한다."""
+def predict_images(predictor, project, test_image_paths, threshold, output_dir):
+    """주어진 이미지들을 각각 예측하고 바운딩 박스 시각화 PNG 를 output_dir 에 저장한다."""
     for path in test_image_paths:
-        predict_and_visualize(predictor, project, path, test_dir, threshold)
+        predict_and_visualize(predictor, project, path, output_dir, threshold)

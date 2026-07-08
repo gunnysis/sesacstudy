@@ -76,3 +76,8 @@ desktop.ini
 !*.env.example
 !.env.example
 
+
+# 0706 Custom Vision — 인물 사진 보호: 테스트 입력·예측 결과물은 로컬 전용(안내 README 만 추적)
+0706/custom-vision/Images/test/*
+!0706/custom-vision/Images/test/README.md
+0706/custom-vision/Images/predictions/

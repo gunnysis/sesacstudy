@@ -13,8 +13,11 @@ matplotlib.rcParams["axes.unicode_minus"] = False
 TAG_COLORS = {"fork": "lime", "scissors": "cyan", "glasses": "yellow"}  # 태그별 바운딩 박스 색상
 
 
-def predict_and_visualize(predictor, project, test_image_path, test_dir, prob_threshold):
-    """이미지 1장을 예측하고 바운딩 박스를 그려 prediction_<원본이름>.png 로 저장한다."""
+def predict_and_visualize(predictor, project, test_image_path, output_dir, prob_threshold):
+    """이미지 1장을 예측하고 바운딩 박스를 그려 output_dir/prediction_<원본이름>.png 로 저장한다.
+
+    출력은 입력(test)과 섞이지 않도록 별도 폴더(Images/predictions/)에 저장한다.
+    """
     name = os.path.basename(test_image_path)
     print(f"\n=== 예측: {name} ===")
 
@@ -55,6 +58,7 @@ def predict_and_visualize(predictor, project, test_image_path, test_dir, prob_th
     plt.tight_layout()
 
     stem = os.path.splitext(name)[0]
-    output_path = os.path.join(test_dir, f"prediction_{stem}.png")
+    os.makedirs(output_dir, exist_ok=True)
+    output_path = os.path.join(output_dir, f"prediction_{stem}.png")
     fig.savefig(output_path, dpi=120, bbox_inches="tight")
     print(f"시각화 저장: {output_path} (표시 {drawn}건 / 전체 {len(results.predictions)}건)")

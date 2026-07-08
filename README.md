@@ -86,7 +86,8 @@ sesacstudy/
 │       ├── augment_forkscissors.py # fork·scissors 증강(반전 시 박스 좌표 변환 → YOLO .txt 사이드카)
 │       ├── validate_retrain.py     # 재학습 격리 검증용 임시 러너
 │       ├── TROUBLESHOOTING.md      # 학습 stuck 장애 디버깅 기록(원인·수정·검증·재발방지)
-│       ├── Images/                 # fork·scissors·glasses 학습용 + test 예측용
+│       ├── Images/                 # fork·scissors·glasses 학습용 + test(입력)·predictions(출력)
+│       │                           #   ⚠ test·predictions 는 인물사진 보호로 git 미추적(README 만 추적)
 │       ├── requirements.txt        # azure-...-customvision·opencv-python 등
 │       ├── .env.example            # 채울 환경변수 목록(키 없음)
 │       └── .env                    # VISION_TRAINING/PREDICTION_*·VISION_PROJECT_NAME (git 제외)
@@ -206,7 +207,8 @@ sesacstudy/
   - 세 태그 모두 **권장 50장** 충족: fork·scissors 는 `augment_forkscissors.py` 증강(반전 시 `left' = 1 - left - width` 로 박스도 변환, YOLO `.txt` 사이드카로 저장)으로 20→50장
 - 재실행 안전 설계(트러블슈팅 반영 — 상세는 [TROUBLESHOOTING.md](0706/custom-vision/TROUBLESHOOTING.md)): **진행 중 학습을 이미지 변경 '전'에 대기**(학습 중 참조 이미지 삭제로 인한 백엔드 stuck 방지 — 근본 원인), 변경 없으면 학습 생략하고 기존 모델 재사용(`Nothing changed` 정상 처리), 프로젝트/태그 **get-or-create** + **ObjectDetection 도메인 검증**(Classification 프로젝트 오지정 시 조기 실패), 학습 폴링 **20분 타임아웃**, **이터레이션 자동 정리**(프로젝트당 20개 상한 보호), 이름 점유 시 unpublish 후 재게시
 - 학습 전 **라벨 자동 점검**(`audit.py`): 리전 없는 이미지·너무 작은/이미지 밖 박스·규격(최소 256px)·권장(태그당 50+) 미달을 경고
-- 실행: `python main.py [임계값 0~1] [테스트이미지경로]` (인자 없으면 test 폴더의 `test_*` 전체 예측) — 결과는 `Images/test/prediction_<이름>.png` 로 저장. glasses 박스 로직을 바꿨으면 `--refresh-glasses`(삭제 후 재업로드), 강제 재학습은 `--force`
+- 실행: `python main.py [임계값 0~1] [테스트이미지경로]` (인자 없으면 `Images/test/` 의 모든 이미지 예측 — 파일명 제한 없음) — 결과는 입력과 분리된 `Images/predictions/prediction_<이름>.png` 로 저장. glasses 박스 로직을 바꿨으면 `--refresh-glasses`(삭제 후 재업로드), 강제 재학습은 `--force`
+- **개인정보 보호**: `Images/test/`(테스트 입력)와 `Images/predictions/`(예측 결과)는 인물 사진이 포함될 수 있어 **git 미추적**(각 폴더 안내 README 만 추적) — 테스트 이미지는 사용자가 직접 배치
 - 환경변수(`.env`, 목록은 `.env.example` 참고): `VISION_TRAINING_ENDPOINT`·`VISION_TRAINING_KEY`·`VISION_PREDICTION_ENDPOINT`·`VISION_PREDICTION_KEY`·`VISION_PREDICTION_RESOURCE_ID`·`VISION_PROJECT_NAME`(선택 `VISION_PROJECT_ID`) (git 제외)
 - 사용 패키지: `azure-cognitiveservices-vision-customvision`·`opencv-python`·`matplotlib`·`Pillow`·`python-dotenv` (`requirements.txt` 참고)
 - ⚠ Azure Custom Vision 은 **2028-09-25 지원 종료 예정**(공식 공지) — 장기적으로 Azure Machine Learning AutoML 등으로 전환 권장

@@ -43,4 +43,5 @@ publish_latest(trainer, project, iteration)
 print("Done!")
 
 test_dir = os.path.join(BASE_IMAGE_LOCATION, "test")
-predict_and_visualize(predictor, project, os.path.join(test_dir, "test_image3.jpg"), test_dir, 0.3)
+predictions_dir = os.path.join(BASE_IMAGE_LOCATION, "predictions")
+predict_and_visualize(predictor, project, os.path.join(test_dir, "test_image3.jpg"), predictions_dir, 0.3)

@@ -5,9 +5,10 @@ fork·scissors·glasses 를 감지하는 모델을 학습·게시하고 테스�
 
 사용법:
 python main.py [임계값 0~1] [테스트이미지경로]
-    - 인자 없음     : test 폴더에서 'test_' 로 시작하는 모든 이미지를 예측(임계값 0.5)
+    - 인자 없음     : Images/test 폴더의 모든 이미지를 예측(임계값 0.5)
     - 임계값만      : 표시 신뢰도 기준만 변경
     - 임계값 + 경로 : 지정한 그 파일 하나만 예측
+예측 결과 PNG 는 Images/predictions/ 에 저장된다(입력·출력 분리).
 python main.py --help  로 옵션 설명을 볼 수 있다.
 
 참고 문서:
@@ -40,7 +41,7 @@ def parse_args():
     )
     parser.add_argument(
         "image", nargs="?", default=None,
-        help="예측할 특정 이미지 경로 (생략 시 test 폴더의 test_*.jpg 전체)",
+        help="예측할 특정 이미지 경로 (생략 시 Images/test 폴더의 모든 이미지)",
     )
     parser.add_argument(
         "--refresh-glasses", action="store_true",
@@ -54,12 +55,15 @@ def parse_args():
 
 
 def resolve_test_images(test_dir, image_arg):
-    """예측할 테스트 이미지 경로 리스트를 결정한다(인자로 특정 파일 지정 가능)."""
+    """예측할 테스트 이미지 경로 리스트를 결정한다(인자로 특정 파일 지정 가능).
+
+    예측 결과 PNG 는 별도 폴더(Images/predictions/)에 저장되므로, test 폴더의
+    모든 이미지 파일을 파일명 제한 없이 예측 대상으로 삼는다.
+    """
     if image_arg:
         return [image_arg]
-    # 결과 PNG(prediction_*.png)는 test_ 로 시작하지 않으므로 다시 잡히지 않는다.
     return sorted(
-        p for p in glob.glob(os.path.join(test_dir, "test_*"))
+        p for p in glob.glob(os.path.join(test_dir, "*"))
         if p.lower().endswith((".jpg", ".jpeg", ".png"))
     )
 
@@ -88,12 +92,13 @@ def main():
         print("=" * 60)
         sys.exit(2)
 
-    # 3) 예측 + 시각화
+    # 3) 예측 + 시각화 (입력: Images/test/, 출력: Images/predictions/ — 입력·출력 분리)
     test_dir = os.path.join(BASE_IMAGE_LOCATION, "test")
+    predictions_dir = os.path.join(BASE_IMAGE_LOCATION, "predictions")
     test_image_paths = resolve_test_images(test_dir, args.image)
     if not test_image_paths:
-        print(f"[경고] 예측할 이미지가 없습니다. {test_dir} 에 'test_' 로 시작하는 이미지를 넣으세요.")
-    predict_images(predictor, project, test_image_paths, args.threshold, test_dir)
+        print(f"[경고] 예측할 이미지가 없습니다. {test_dir} 에 이미지(jpg/png)를 넣으세요.")
+    predict_images(predictor, project, test_image_paths, args.threshold, predictions_dir)
 
     # 파일 저장과 별개로 모든 결과 창을 띄운다 (창을 닫으면 종료)
     plt.show()
